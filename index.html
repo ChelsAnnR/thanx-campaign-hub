@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanx Campaign Intelligence Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f7f9;
+  --bg-white: #ffffff;
+  --surface: #ffffff;
+  --surface2: #f0f4f7;
+  --border: #e2e8f0;
+  --border-focus: #00b4a4;
+  --teal: #00b4a4;
+  --teal-light: #e6f8f6;
+  --teal-mid: #b3ece8;
+  --navy: #0f2031;
+  --navy-mid: #1a3a4a;
+  --text: #0f2031;
+  --text-secondary: #4a6274;
+  --text-muted: #8fa5b3;
+  --lift-low-bg: #ecfdf5;
+  --lift-low-text: #059669;
+  --lift-low-border: #a7f3d0;
+  --lift-med-bg: #fffbeb;
+  --lift-med-text: #d97706;
+  --lift-med-border: #fde68a;
+  --lift-high-bg: #fff7ed;
+  --lift-high-text: #ea580c;
+  --lift-high-border: #fed7aa;
+  --shadow-sm: 0 1px 3px rgba(15,32,49,0.08), 0 1px 2px rgba(15,32,49,0.04);
+  --shadow-md: 0 4px 16px rgba(15,32,49,0.1), 0 2px 6px rgba(15,32,49,0.06);
+  --shadow-hover: 0 8px 28px rgba(0,180,164,0.14), 0 4px 12px rgba(15,32,49,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.topbar {
+  background: var(--bg-white);
+  border-bottom: 1.5px solid var(--border);
+  padding: 0 40px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: var(--shadow-sm);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+  color: var(--navy);
+}
+
+.logo-mark {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--teal), #009e8f);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: white;
+  font-weight: 800;
+}
+
+.logo span { color: var(--teal); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: var(--teal-light);
+  color: var(--teal);
+  border: 1px solid var(--teal-mid);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ===== APP LAYOUT ===== */
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ===== LEFT: ADVISOR PANEL (persistent) ===== */
+.advisor-panel {
+  width: 400px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-white);
+  border-right: 1.5px solid var(--border);
+  overflow: hidden;
+}
+
+.advisor-header {
+  padding: 16px 20px 14px;
+  background: var(--navy);
+  flex-shrink: 0;
+}
+.advisor-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.advisor-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 3px;
+  font-weight: 300;
+}
+
+.advisor-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  background: var(--bg);
+}
+
+/* ===== RIGHT: CAMPAIGNS PANEL ===== */
+.campaigns-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ===== CAMPAIGNS TOPBAR ===== */
+.campaigns-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 20px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.campaigns-stats {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.campaigns-stats .stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 13px;
+}
+.campaigns-stats .stat-pipe { color: var(--border); margin: 0 5px; }
+.stat-label { color: var(--text-muted); }
+
+/* ===== COMPACT SEARCH ===== */
+.search-wrap-compact {
+  position: relative;
+  flex-shrink: 0;
+}
+.search-icon-compact {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.search-input-compact {
+  width: 230px;
+  padding: 7px 30px 7px 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, width 0.25s;
+}
+.search-input-compact:focus {
+  border-color: var(--teal);
+  background: white;
+  width: 280px;
+}
+.search-input-compact::placeholder { color: var(--text-muted); }
+.search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  transition: all 0.2s;
+}
+.search-clear:hover { background: var(--border); }
+.search-clear.visible { display: flex; }
+
+/* ===== FILTERS ===== */
+.filters-bar {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.filters-bar::-webkit-scrollbar { display: none; }
+
+.filter-pill {
+  flex-shrink: 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 6px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+}
+.filter-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+.filter-pill.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+
+/* ===== SECONDARY FILTER ROW ===== */
+.secondary-filters {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 20px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  align-items: center;
+  flex-shrink: 0;
+}
+.secondary-filters::-webkit-scrollbar { display: none; }
+
+.filter-label-sm {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+.lift-pill {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: 'DM Sans', sans-serif;
+  border: 1px solid transparent;
+}
+.lift-pill.low { background: var(--lift-low-bg); color: var(--lift-low-text); border-color: var(--lift-low-border); }
+.lift-pill.medium { background: var(--lift-med-bg); color: var(--lift-med-text); border-color: var(--lift-med-border); }
+.lift-pill.high { background: var(--lift-high-bg); color: var(--lift-high-text); border-color: var(--lift-high-border); }
+.lift-pill.all-lift { background: var(--surface2); color: var(--text-secondary); border-color: var(--border); }
+.lift-pill.active-lift {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+  font-weight: 700;
+}
+.lift-pill.all-lift.active-lift { outline-color: var(--teal); }
+
+/* ===== GRID ===== */
+.grid-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeUp 0.4s ease forwards;
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--teal);
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.lift-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid transparent;
+}
+.lift-badge.low { background: var(--lift-low-bg); color: var(--lift-low-text); border-color: var(--lift-low-border); }
+.lift-badge.medium { background: var(--lift-med-bg); color: var(--lift-med-text); border-color: var(--lift-med-border); }
+.lift-badge.high { background: var(--lift-high-bg); color: var(--lift-high-text); border-color: var(--lift-high-border); }
+
+.card-merchant {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+.card-name {
+  font-size: 12.5px;
+  color: var(--teal);
+  font-weight: 500;
+  margin-top: -4px;
+}
+
+.card-goal {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-config-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.card-config {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  border-left: 2.5px solid var(--teal-mid);
+  padding-left: 10px;
+}
+
+.card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: auto;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.lifecycle-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.lifecycle-tag.enroll { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.lifecycle-tag.activate { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.lifecycle-tag.engage { background: #faf5ff; color: #7c3aed; border: 1px solid #e9d5ff; }
+.lifecycle-tag.retain { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.lifecycle-tag.nondiscount { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-mid); }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 80px 20px;
+  display: none;
+}
+.empty-state.visible { display: block; text-align: left; padding: 0; }
+.empty-icon { font-size: 44px; margin-bottom: 14px; opacity: 0.4; }
+.empty-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.empty-body { font-size: 14px; color: var(--text-secondary); }
+
+/* ===== STRATEGY PANEL ===== */
+.strategy-panel {
+  background: var(--bg-white);
+  border: 1.5px solid var(--teal-mid);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  box-shadow: 0 4px 24px rgba(0,180,164,0.1), var(--shadow-sm);
+  animation: fadeUp 0.35s ease both;
+}
+.strategy-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.strategy-icon {
+  font-size: 36px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.strategy-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  margin-bottom: 6px;
+}
+.strategy-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+}
+.strategy-body {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.strategy-steps-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.strategy-steps {
+  padding-left: 18px;
+  margin-bottom: 20px;
+}
+.strategy-steps li {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.strategy-steps li strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+.strategy-tip {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.strategy-tip-label {
+  display: block;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #b45309;
+}
+.strategy-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.strategy-filter-btn {
+  margin-left: auto;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.strategy-filter-btn:hover { background: #009e8f; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,32,49,0.5);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  max-width: 580px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+  box-shadow: 0 24px 60px rgba(15,32,49,0.2);
+  transform: scale(0.95) translateY(8px);
+  transition: transform 0.25s;
+  scrollbar-width: thin;
+}
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.modal-close:hover { background: var(--border); color: var(--text); }
+
+.modal-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.modal-merchant { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; margin-bottom: 3px; }
+.modal-name { font-size: 14px; color: var(--teal); font-weight: 500; margin-bottom: 20px; }
+.modal-divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+.modal-field { margin-bottom: 16px; }
+.modal-field-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+.modal-field-value { font-size: 14px; color: var(--text); line-height: 1.6; }
+
+.modal-config-box {
+  background: var(--surface2);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.modal-result-box {
+  border-radius: 10px;
+  padding: 14px 16px;
+  border: 1px solid;
+}
+.modal-result-box.has-results { background: #ecfdf5; border-color: #a7f3d0; }
+.modal-result-box.no-results { background: var(--surface2); border-color: var(--border); }
+.modal-result-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+.modal-result-box.has-results .modal-result-label { color: #059669; }
+.modal-result-box.no-results .modal-result-label { color: var(--text-muted); }
+.modal-result-value { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+.modal-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.modal-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.modal-tool-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--navy);
+  color: var(--teal);
+  border: 1px solid var(--navy-mid);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.modal-tool-tag::before { content: '⚙'; font-size: 10px; }
+.modal-tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--teal-light);
+  color: var(--teal);
+  border: 1px solid var(--teal-mid);
+}
+
+.modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+
+.btn-copy {
+  flex: 1;
+  padding: 11px 18px;
+  background: var(--teal);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.btn-copy:hover { background: #009e8f; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,180,164,0.3); }
+.btn-copy.copied { background: #059669; }
+
+.btn-close-modal {
+  padding: 11px 18px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-close-modal:hover { border-color: var(--text-muted); color: var(--text); }
+
+/* ===== ADVISOR MESSAGES ===== */
+.msg { display: flex; gap: 8px; align-items: flex-start; }
+.msg.user { flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.msg.bot .msg-avatar { background: var(--navy); color: var(--teal); border: 1.5px solid var(--teal-mid); }
+.msg.user .msg-avatar { background: var(--surface2); border: 1px solid var(--border); }
+
+.msg-bubble {
+  max-width: 88%;
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.msg.bot .msg-bubble { background: white; color: var(--text); border: 1px solid var(--border); border-top-left-radius: 4px; box-shadow: var(--shadow-sm); }
+.msg.user .msg-bubble { background: var(--teal-light); color: var(--navy); border: 1px solid var(--teal-mid); border-top-right-radius: 4px; }
+
+.msg-campaigns { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+.msg-campaign-pill {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.msg-campaign-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+.msg-campaign-pill strong { color: var(--text); display: block; font-size: 12px; }
+
+.msg-tip {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 7px;
+  font-size: 11.5px;
+  color: #92400e;
+}
+
+
+.advisor-input-area {
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: white;
+  flex-shrink: 0;
+}
+.advisor-input {
+  flex: 1;
+  padding: 10px 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  resize: none;
+  height: 90px;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+.advisor-input:focus { border-color: var(--teal); background: white; }
+.advisor-input::placeholder { color: var(--text-muted); }
+
+.advisor-send {
+  width: 34px;
+  height: 34px;
+  background: var(--teal);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.advisor-send:hover { background: #009e8f; transform: scale(1.08); }
+
+/* ===== TYPE COLORS ===== */
+.type-winback { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.type-activation { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.type-cart { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
+.type-frequency { background: #faf5ff; color: #7c3aed; border: 1px solid #e9d5ff; }
+.type-bonus { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+.type-holiday { background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; }
+.type-app { background: var(--teal-light); color: #0f766e; border: 1px solid var(--teal-mid); }
+.type-vip { background: #fdf4ff; color: #9333ea; border: 1px solid #e9d5ff; }
+.type-menu { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.type-brand { background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; }
+.type-rewards { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+.type-onboarding { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+.type-nondiscount { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+.type-default { background: var(--surface2); color: var(--text-secondary); border: 1px solid var(--border); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ===== PANEL RESIZER ===== */
+.panel-resizer {
+  width: 6px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: var(--border);
+  transition: background 0.15s;
+  position: relative;
+  z-index: 5;
+}
+.panel-resizer:hover,
+.panel-resizer.dragging {
+  background: var(--teal);
+}
+.panel-resizer::after {
+  content: '⋮';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+  line-height: 1;
+}
+.panel-resizer.dragging::after { color: white; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .advisor-panel { width: 320px; } }
+@media (max-width: 768px) {
+  .app-body { flex-direction: column; }
+  .advisor-panel { width: 100%; height: 220px; border-right: none; border-bottom: 1.5px solid var(--border); }
+  .grid { grid-template-columns: 1fr; }
+  .filters-bar, .secondary-filters, .campaigns-topbar { padding-left: 12px; padding-right: 12px; }
+  .search-input-compact { width: 160px; }
+  .search-input-compact:focus { width: 200px; }
+}
+
+/* ===== ROLE SELECTOR ===== */
+.role-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,32,49,0.88);
+  z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.role-overlay.hidden { display: none; }
+.role-modal {
+  background: white; border-radius: 18px; padding: 48px 40px 44px;
+  max-width: 700px; width: 92%; text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+  animation: fadeUp 0.35s ease;
+}
+.role-modal-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.role-modal-logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; color: var(--navy); }
+.role-modal-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.role-modal-sub { color: var(--text-secondary); font-size: 14px; margin-bottom: 32px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+.role-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.role-card {
+  border: 2px solid var(--border); border-radius: 12px; padding: 22px 12px 18px;
+  cursor: pointer; transition: all 0.15s; text-align: center;
+}
+.role-card:hover {
+  border-color: var(--teal); background: var(--teal-light);
+  transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,180,164,0.12);
+}
+.role-card-icon { font-size: 28px; margin-bottom: 10px; }
+.role-card-label { font-weight: 700; font-size: 13px; color: var(--navy); margin-bottom: 6px; }
+.role-card-desc { font-size: 11.5px; color: var(--text-secondary); line-height: 1.45; }
+
+/* ===== ROLE BADGE + ADD CAMPAIGN BUTTON ===== */
+.role-badge-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--surface2);
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.role-badge-btn:hover { border-color: var(--teal); color: var(--teal); }
+.btn-add-campaign {
+  display: flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--teal); color: white;
+  font-weight: 600; font-size: 13px; border: none; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+}
+.btn-add-campaign:hover { background: #009a8f; }
+
+/* ===== ADVISOR HIDDEN STATE ===== */
+.advisor-panel.advisor-hidden,
+.panel-resizer.advisor-hidden { display: none !important; }
+
+/* ===== HOW TO BUILD THIS (MODAL) ===== */
+.modal-build-section { border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+.modal-build-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px; background: var(--surface2); cursor: pointer; user-select: none;
+}
+.modal-build-toggle:hover { background: #eef0f3; }
+.modal-build-toggle-left { display: flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13px; color: var(--navy); }
+.modal-build-chevron { font-size: 10px; color: var(--text-muted); transition: transform 0.2s; }
+.modal-build-chevron.open { transform: rotate(180deg); }
+.modal-build-body { padding: 14px 16px 10px; display: none; }
+.modal-build-body.open { display: block; }
+.modal-build-steps { list-style: none; padding: 0; margin: 0 0 8px 0; counter-reset: steps; }
+.modal-build-steps li {
+  counter-increment: steps; display: flex; align-items: flex-start;
+  gap: 10px; margin-bottom: 9px; font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+}
+.modal-build-steps li::before {
+  content: counter(steps); min-width: 22px; height: 22px; border-radius: 50%;
+  background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.modal-build-time { font-size: 11px; color: var(--text-muted); padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* ===== ADD CAMPAIGN DRAWER ===== */
+.add-drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(15,32,49,0.35);
+  z-index: 800; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.add-drawer-backdrop.open { opacity: 1; pointer-events: all; }
+.add-drawer {
+  position: fixed; top: 0; right: 0; width: 460px; max-width: 100vw; height: 100vh;
+  background: white; z-index: 801; box-shadow: -4px 0 32px rgba(0,0,0,0.12);
+  display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.add-drawer.open { transform: translateX(0); }
+.add-drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px; border-bottom: 1.5px solid var(--border); flex-shrink: 0;
+}
+.add-drawer-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+.add-drawer-close-btn {
+  background: none; border: none; cursor: pointer; font-size: 18px;
+  color: var(--text-muted); padding: 4px 8px; border-radius: 6px; line-height: 1;
+}
+.add-drawer-close-btn:hover { background: var(--surface2); }
+.add-drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
+.add-step { display: none; }
+.add-step.active { display: block; }
+.add-step-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
+.add-step-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.add-step-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: 12px; padding: 40px 24px;
+  text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 16px; position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--teal); background: var(--teal-light); }
+.upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-zone-icon { font-size: 32px; margin-bottom: 8px; }
+.upload-zone-label { font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+.upload-zone-sub { font-size: 12px; color: var(--text-muted); }
+.add-skip-link {
+  display: block; text-align: center; font-size: 13px; color: var(--text-secondary);
+  cursor: pointer; padding: 8px; text-decoration: underline; text-underline-offset: 3px;
+}
+.add-skip-link:hover { color: var(--teal); }
+.add-form-field { margin-bottom: 14px; }
+.add-form-label { display: block; font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 5px; }
+.add-form-input, .add-form-textarea, .add-form-select {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--navy); background: white;
+  box-sizing: border-box; transition: border-color 0.15s;
+}
+.add-form-input:focus, .add-form-textarea:focus, .add-form-select:focus { outline: none; border-color: var(--teal); }
+.add-form-textarea { min-height: 70px; resize: vertical; }
+.add-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.add-toggle-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); }
+.add-toggle-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--teal); }
+.add-drawer-footer {
+  padding: 16px 24px; border-top: 1.5px solid var(--border);
+  display: flex; gap: 10px; flex-shrink: 0;
+}
+.btn-drawer-primary {
+  flex: 1; padding: 10px; background: var(--teal); color: white; border: none;
+  border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: background 0.15s; font-family: 'DM Sans', sans-serif;
+}
+.btn-drawer-primary:hover { background: #009a8f; }
+.btn-drawer-primary:disabled { background: var(--border); cursor: not-allowed; }
+.btn-drawer-back {
+  padding: 10px 18px; background: var(--surface2); color: var(--text-secondary);
+  border: 1.5px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 14px;
+  cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif;
+}
+.btn-drawer-back:hover { border-color: var(--text-secondary); }
+.extracting-wrap {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px 24px; text-align: center;
+}
+.extracting-spinner {
+  width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--teal);
+  border-radius: 50%; animation: spin 0.85s linear infinite; margin-bottom: 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.extracting-label { font-size: 14px; color: var(--text-secondary); }
+.add-success-wrap {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px 24px; text-align: center;
+}
+.add-success-icon { font-size: 48px; margin-bottom: 14px; }
+.add-success-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.add-success-sub { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ===== SALES ROLE: REVENUE HIGHLIGHT ===== */
+.card-revenue-highlight {
+  font-weight: 700; font-size: 12px; color: var(--teal); margin-top: 6px;
+  padding: 4px 9px; background: var(--teal-light); border-radius: 6px; display: inline-block;
+}
+/* ===== PRODUCT MARKETING: GROUP HEADERS ===== */
+.campaign-group-header {
+  grid-column: 1 / -1; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 10px 0 6px; border-bottom: 1.5px solid var(--border); margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">T</div>
+    Thanx <span>&nbsp;Intelligence</span>
+  </div>
+  <div class="header-right" style="display:flex;align-items:center;gap:10px;">
+    <button class="btn-add-campaign" id="btnAddCampaign">＋ Add Campaign</button>
+    <button class="role-badge-btn" id="roleBadgeBtn">
+      <span id="roleBadgeIcon">👥</span>
+      <span id="roleBadgeLabel">CSM</span>
+    </button>
+  </div>
+</div>
+
+<div class="app-body">
+
+  <!-- Left: Campaign Advisor -->
+  <div class="advisor-panel" id="advisorPanel">
+    <div class="advisor-header">
+      <div class="advisor-title">⚡ Campaign Advisor</div>
+      <div class="advisor-subtitle">Ask me anything — new ideas, strategy, examples</div>
+    </div>
+    <div class="advisor-messages" id="advisorMessages"></div>
+    <div class="advisor-input-area">
+      <textarea class="advisor-input" id="advisorInput" placeholder="Ask anything — March Madness ideas, win-back strategy, first campaign for a new merchant..." autocomplete="off"></textarea>
+      <button class="advisor-send" id="advisorSend">→</button>
+    </div>
+  </div>
+
+  <!-- Drag-to-resize handle -->
+  <div class="panel-resizer" id="panelResizer"></div>
+
+  <!-- Right: Campaigns Browser -->
+  <div class="campaigns-panel">
+
+    <div class="campaigns-topbar">
+      <div class="campaigns-stats">
+        <span class="stat-num" id="statCampaigns">55</span><span class="stat-label">&nbsp;campaigns</span>
+        <span class="stat-pipe">·</span>
+        <span class="stat-num" id="statMerchants">24</span><span class="stat-label">&nbsp;merchants</span>
+        <span class="stat-pipe">·</span>
+        <span class="stat-num" style="color:var(--lift-low-text)" id="statLow">18</span><span class="stat-label">&nbsp;low</span>
+        <span class="stat-pipe">·</span>
+        <span class="stat-num" style="color:var(--lift-med-text)" id="statMed">17</span><span class="stat-label">&nbsp;med</span>
+        <span class="stat-pipe">·</span>
+        <span class="stat-num" style="color:var(--lift-high-text)" id="statHigh">10</span><span class="stat-label">&nbsp;high lift</span>
+      </div>
+      <div class="search-wrap-compact">
+        <svg class="search-icon-compact" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="search-input-compact" id="searchInput" placeholder="Filter campaigns..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Clear">✕</button>
+      </div>
+    </div>
+
+    <div class="filters-bar" id="filterBar">
+      <button class="filter-pill active" data-filter="All">All Types</button>
+      <button class="filter-pill" data-filter="Onboarding">Onboarding</button>
+      <button class="filter-pill" data-filter="Activation">Activation</button>
+      <button class="filter-pill" data-filter="Win Back">Win Back</button>
+      <button class="filter-pill" data-filter="Cart Abandonment">Cart Abandonment</button>
+      <button class="filter-pill" data-filter="Frequency Challenge">Frequency Challenge</button>
+      <button class="filter-pill" data-filter="Bonus Points">Bonus Points</button>
+      <button class="filter-pill" data-filter="Holiday / Seasonal">Holiday / Seasonal</button>
+      <button class="filter-pill" data-filter="App Downloads">App Downloads</button>
+      <button class="filter-pill" data-filter="VIP / Daypart">VIP / Daypart</button>
+      <button class="filter-pill" data-filter="Menu Launch">Menu Launch</button>
+      <button class="filter-pill" data-filter="Non-Discount">Non-Discount Ideas</button>
+      <button class="filter-pill" data-filter="Brand Engagement">Brand Engagement</button>
+      <button class="filter-pill" data-filter="Rewards Education">Rewards Education</button>
+    </div>
+
+    <div class="secondary-filters">
+      <span class="filter-label-sm">Lift:</span>
+      <button class="lift-pill all-lift active-lift" data-lift="All">All</button>
+      <button class="lift-pill low" data-lift="Low">🟢 Low Lift</button>
+      <button class="lift-pill medium" data-lift="Medium">🟡 Medium Lift</button>
+      <button class="lift-pill high" data-lift="High">🟠 High Lift</button>
+    </div>
+
+    <div class="grid-scroll">
+      <div class="grid" id="campaignGrid">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-title">No campaigns match</div>
+          <div class="empty-body">Try a different search term or clear your filters.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Role Selector Modal -->
+<div class="role-overlay hidden" id="roleOverlay">
+  <div class="role-modal">
+    <div class="role-modal-logo">
+      <div class="logo-mark" style="width:30px;height:30px;font-size:16px;line-height:30px">T</div>
+      <span class="role-modal-logo-text">Thanx Campaign Hub</span>
+    </div>
+    <div class="role-modal-title">Who are you today?</div>
+    <div class="role-modal-sub">Your role shapes how campaigns are surfaced and how the Advisor responds to you.</div>
+    <div class="role-cards">
+      <div class="role-card" data-role="CSM">
+        <div class="role-card-icon">👥</div>
+        <div class="role-card-label">CSM</div>
+        <div class="role-card-desc">Strategic advice, merchant-ready pitches, and full Advisor access</div>
+      </div>
+      <div class="role-card" data-role="Sales">
+        <div class="role-card-icon">📈</div>
+        <div class="role-card-label">Sales</div>
+        <div class="role-card-desc">Proven ROI results front and center, objection-handling Advisor tone</div>
+      </div>
+      <div class="role-card" data-role="Product Marketing">
+        <div class="role-card-icon">🎨</div>
+        <div class="role-card-label">Product Marketing</div>
+        <div class="role-card-desc">Campaigns grouped by type, easy copy-paste pitches and bulk access</div>
+      </div>
+      <div class="role-card" data-role="Other">
+        <div class="role-card-icon">🔍</div>
+        <div class="role-card-label">Other</div>
+        <div class="role-card-desc">Browse everything with no special layout applied</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Campaign Drawer -->
+<div class="add-drawer-backdrop" id="addDrawerBackdrop"></div>
+<div class="add-drawer" id="addDrawer">
+  <div class="add-drawer-header">
+    <div class="add-drawer-title">＋ Add a Campaign</div>
+    <button class="add-drawer-close-btn" id="addDrawerCloseBtn">✕</button>
+  </div>
+  <div class="add-drawer-body" id="addDrawerBody">
+
+    <!-- Step 1: Upload or skip -->
+    <div class="add-step active" id="addStep1">
+      <div class="add-step-label">Step 1 of 3</div>
+      <div class="add-step-title">Upload a campaign</div>
+      <div class="add-step-sub">Drop a PDF or screenshot of a campaign email or results doc and we'll auto-fill the form for you.</div>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="uploadInput" accept=".pdf,image/*">
+        <div class="upload-zone-icon">📎</div>
+        <div class="upload-zone-label">Drop a PDF or image here</div>
+        <div class="upload-zone-sub">PDF, PNG, JPG, WEBP — or click to browse</div>
+      </div>
+      <span class="add-skip-link" id="addSkipLink">Skip — I'll fill it in manually →</span>
+    </div>
+
+    <!-- Step 2: Extracting (spinner) -->
+    <div class="add-step" id="addStep2">
+      <div class="extracting-wrap">
+        <div class="extracting-spinner"></div>
+        <div class="extracting-label">Extracting campaign details with AI…</div>
+      </div>
+    </div>
+
+    <!-- Step 3: Review form -->
+    <div class="add-step" id="addStep3">
+      <div class="add-step-label">Step 2 of 3</div>
+      <div class="add-step-title">Review &amp; confirm</div>
+      <div class="add-step-sub">Edit anything that looks off before submitting.</div>
+      <div class="add-form-field">
+        <label class="add-form-label">Merchant Name *</label>
+        <input class="add-form-input" id="af-merchant" placeholder="e.g. Velvet Taco">
+      </div>
+      <div class="add-form-field">
+        <label class="add-form-label">Campaign Name *</label>
+        <input class="add-form-input" id="af-name" placeholder="e.g. January WTF Lineup">
+      </div>
+      <div class="add-form-row">
+        <div class="add-form-field">
+          <label class="add-form-label">Campaign Type</label>
+          <select class="add-form-select" id="af-type">
+            <option>Activation</option><option>Cart Abandonment</option><option>Win Back</option>
+            <option>Onboarding</option><option>Holiday / Seasonal</option><option>Frequency Challenge</option>
+            <option>Bonus Points</option><option>App Downloads</option><option>VIP / Daypart</option>
+            <option>Menu Launch</option><option>Brand Engagement</option><option>Rewards Education</option>
+            <option>Non-Discount</option>
+          </select>
+        </div>
+        <div class="add-form-field">
+          <label class="add-form-label">Lift Level</label>
+          <select class="add-form-select" id="af-lift">
+            <option value="Low">Low Lift</option>
+            <option value="Medium">Medium Lift</option>
+            <option value="High">High Lift</option>
+          </select>
+        </div>
+      </div>
+      <div class="add-form-row">
+        <div class="add-form-field">
+          <label class="add-form-label">Lifecycle Stage</label>
+          <select class="add-form-select" id="af-lifecycle">
+            <option>Enroll</option><option>Activate</option><option>Engage</option><option>Retain</option>
+          </select>
+        </div>
+        <div class="add-form-field">
+          <label class="add-form-label">Your Name</label>
+          <input class="add-form-input" id="af-submitter" placeholder="e.g. Chelsea">
+        </div>
+      </div>
+      <div class="add-form-field">
+        <label class="add-form-label">Campaign Goal</label>
+        <textarea class="add-form-textarea" id="af-goal" placeholder="What is this campaign trying to accomplish?"></textarea>
+      </div>
+      <div class="add-form-field">
+        <label class="add-form-label">How It Works (Configuration)</label>
+        <textarea class="add-form-textarea" id="af-config" placeholder="Segment, offer, automation trigger details…"></textarea>
+      </div>
+      <div class="add-form-field">
+        <label class="add-form-label">Results (if any)</label>
+        <textarea class="add-form-textarea" id="af-results" placeholder="Revenue, purchase rate, lift — or notes if no hard numbers" style="min-height:56px"></textarea>
+      </div>
+      <div class="add-form-field">
+        <label class="add-form-label">Tags (comma-separated)</label>
+        <input class="add-form-input" id="af-tags" placeholder="e.g. cart abandonment, a/b test, automation">
+      </div>
+      <div class="add-form-field">
+        <div class="add-toggle-row">
+          <input type="checkbox" id="af-nondiscount">
+          <label for="af-nondiscount">This is a non-discount campaign (no reward or offer)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="add-step" id="addStep4">
+      <div class="add-success-wrap">
+        <div class="add-success-icon">🎉</div>
+        <div class="add-success-title">Campaign added!</div>
+        <div class="add-success-sub">It's now live in the hub and saved for everyone to see. Thanks for contributing!</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="add-drawer-footer" id="addDrawerFooter">
+    <button class="btn-drawer-back" id="addDrawerBack" style="display:none">← Back</button>
+    <button class="btn-drawer-primary" id="addDrawerNext">Next →</button>
+  </div>
+</div>
+
+<script>
+const campaigns = [
+  // ===== SLACK CAMPAIGNS =====
+  { id:1, merchant:"RibCrib", name:"Cart Abandonment A/B Test", type:"Cart Abandonment", lifecycle:"Engage", lift:"Medium", goal:"Increase cart conversion", config:"A/B test: $5 off reward vs. no reward, automated to customers who abandoned cart 24 hours prior.", results:"13%+ purchase rate → $58,231 in attributable revenue", hasResults:true, tags:["cart abandonment","a/b test","automation","discount"], nonDiscount:false },
+  { id:2, merchant:"Urbane Cafe", name:"2nd Purchase Campaign", type:"Activation", lifecycle:"Activate", lift:"Medium", goal:"Drive second purchase conversion from first-time buyers", config:"Targeted campaign to first-time purchasers to encourage a follow-up visit while brand is top of mind.", results:"9,695 purchases → $257,109 in attributable revenue", hasResults:true, tags:["activation","second purchase","conversion","new customers"], nonDiscount:false },
+  { id:3, merchant:"Sweetfin", name:"Last Call – 11 Months Lapsed", type:"Win Back", lifecycle:"Retain", lift:"Medium", goal:"Win back users inactive for 11 months and gauge list health", config:"Custom segment: no purchase in 11 months. $5 reward valid 2 days post-purchase. Copy highlighted new menu items (poke burrito, Sweetbox).", results:"151 purchases (0.6%), $3,883 revenue. Key insight: pivoted focus to onboarding & lifecycle.", hasResults:true, tags:["win back","lapsed","re-engagement","discount","segmentation"], nonDiscount:false },
+  { id:4, merchant:"Velvet Taco", name:"Free Taco for App Download", type:"App Downloads", lifecycle:"Engage", lift:"Low", goal:"Drive app downloads and push notification opt-ins", config:"Email to all loyalty signups: high-value free taco reward ONLY available via push notification — urgency to download.", results:"4x average daily downloads on final day (300 → 1,200/day)", hasResults:true, tags:["app downloads","push notifications","urgency","exclusivity"], nonDiscount:false },
+  { id:5, merchant:"Modern Market", name:"January Frequency Challenge", type:"Frequency Challenge", lifecycle:"Engage", lift:"High", goal:"Build visit habit and create engagement during January", config:"3-part automated series: (1) Announce challenge, (2) Trigger at 1st visit, (3) Trigger at 2nd visit + $10 reward.", results:"Strong engagement with multi-touchpoint automation", hasResults:false, tags:["frequency challenge","habit building","automation","series"], nonDiscount:false },
+  { id:6, merchant:"Bubbakoos", name:"Double Points Wednesdays", type:"Bonus Points", lifecycle:"Engage", lift:"Low", goal:"Drive purchases during slow mid-week period", config:"Sent to all loyalty members. 2x points multiplier every Wednesday to combat slow day traffic.", results:"Recurring evergreen campaign", hasResults:false, tags:["double points","slow period","daypart","frequency","multiplier"], nonDiscount:false },
+  { id:7, merchant:"Bubbakoos", name:"Summer Games Bonus Points Challenge", type:"Frequency Challenge", lifecycle:"Engage", lift:"High", goal:"Increase frequency with a themed, tiered challenge", config:"Email announces challenge rules. Custom spend segments bucket qualifying users into tiers. After challenge, winner tiers receive bonus points bundles.", results:"Strong gamified engagement framework", hasResults:false, tags:["frequency challenge","bonus points","gamification","tiers","seasonal"], nonDiscount:false },
+  { id:8, merchant:"Dog Haus", name:"Leap Day 4X Points", type:"Holiday / Seasonal", lifecycle:"Engage", lift:"Low", goal:"Leverage a quirky 'micro-holiday' to spike sales", config:"One-day 4x points multiplier on Leap Day (Feb 29). Short window creates urgency.", results:"Leveraged creative micro-holiday", hasResults:false, tags:["holiday","micro-holiday","points multiplier","urgency","creative"], nonDiscount:false },
+  { id:9, merchant:"Velvet Taco", name:"National Tequila Day Points Multiplier", type:"Holiday / Seasonal", lifecycle:"Engage", lift:"Low", goal:"Promote sales aligned with brand identity on a national day", config:"Points multiplier for loyalty members and email subscribers on July 24.", results:"Brand-aligned holiday activation", hasResults:false, tags:["holiday","national day","points multiplier","brand identity"], nonDiscount:false },
+  { id:10, merchant:"Bluestone Lane", name:"VIP Daypart Menu Preview", type:"VIP / Daypart", lifecycle:"Engage", lift:"High", goal:"Drive lunch business, reward VIPs, and upsell new items with measurable ROI", config:"3-pronged: (1) VIP early access + $5 reward, (2) Targeted send to lunch regulars, (3) Targeted send to morning regulars. Control groups on all 3.", results:"Rigorous measurement framework with control groups", hasResults:false, tags:["vip","daypart","lunch","segmentation","a/b test","control group"], nonDiscount:false },
+  { id:11, merchant:"Eureka!", name:"Loyalty-Exclusive Pastrami Burger", type:"Menu Launch", lifecycle:"Engage", lift:"Medium", goal:"Acquire new loyalty members via loyalty-exclusive menu item", config:"Pastrami burger available ONLY to loyalty members, driving signups and marketplace utilization through October.", results:"Ran through October; strong acquisition driver", hasResults:false, tags:["menu launch","loyalty exclusive","acquisition","signups"], nonDiscount:false },
+  { id:12, merchant:"Tocaya", name:"Cali Bowl Teaser", type:"Menu Launch", lifecycle:"Engage", lift:"Low", goal:"Build buzz and anticipation before new menu item launch", config:"Send-to-all teaser campaign followed by full new menu announcement.", results:"Buzz-building pre-launch approach", hasResults:false, tags:["menu launch","teaser","new item","buzz"], nonDiscount:false },
+  { id:13, merchant:"Roti", name:"Submit a Flavor Contest", type:"Brand Engagement", lifecycle:"Engage", lift:"Low", goal:"Engage customers to feel part of the brand", config:"UGC-style contest inviting customers to submit flavor ideas, building community and brand affinity.", results:"High engagement UGC play", hasResults:false, tags:["brand engagement","ugc","contest","community","creative"], nonDiscount:false },
+  { id:14, merchant:"Sweetfin", name:"Beach Cleanup + BOGO", type:"Brand Engagement", lifecycle:"Engage", lift:"Medium", goal:"Build lifestyle affinity through cause marketing", config:"Cause-marketing campaign tied to beach cleanup event, followed by BOGO promotion for participants.", results:"Community + purchase driver combined", hasResults:false, tags:["brand engagement","cause marketing","BOGO","community","lifestyle"], nonDiscount:false },
+  { id:15, merchant:"Mo'Bettahs", name:"Abandoned Cart Recovery", type:"Cart Abandonment", lifecycle:"Engage", lift:"Medium", goal:"Convert ~1,600 abandoned carts weekly at scale", config:"Automated campaign targeting all customers with abandoned carts.", results:"High ROI automation — set once, earn forever", hasResults:false, tags:["cart abandonment","automation","conversion","revenue recovery"], nonDiscount:false },
+  { id:16, merchant:"fresh&co", name:"Breakfast SKU Frequency Promo", type:"VIP / Daypart", lifecycle:"Engage", lift:"Medium", goal:"Increase frequency based on morning daypart behavior", config:"Custom segment for customers who purchased a breakfast item 8+ times. Bonus points awarded after promo period.", results:"Targeted daypart frequency driver", hasResults:false, tags:["daypart","sku targeting","bonus points","frequency","breakfast"], nonDiscount:false },
+  { id:17, merchant:"Marugame Udon", name:"Rewards Marketplace Education", type:"Rewards Education", lifecycle:"Engage", lift:"Low", goal:"Increase frequency and points marketplace utilization", config:"Educational email outlining new rewards in the points marketplace. Primary: frequency. Secondary: points utilization.", results:"Churn prevention + education play", hasResults:false, tags:["rewards education","marketplace","frequency","churn prevention"], nonDiscount:false },
+  { id:18, merchant:"Kahwa Coffee", name:"Welcome Email", type:"Onboarding", lifecycle:"Activate", lift:"Low", goal:"Educate new signups and secure first purchase", config:"Welcome email explaining program benefits and incentivizing first purchase. Triggered immediately upon enrollment.", results:"Foundation of lifecycle marketing", hasResults:false, tags:["welcome","onboarding","first purchase","education"], nonDiscount:false },
+  { id:19, merchant:"Next Level Burger", name:"Holiday Bonus Points Gift (75 pts)", type:"Bonus Points", lifecycle:"Engage", lift:"Low", goal:"Drive marketplace awareness during holiday season", config:"75 bonus points gifted to all members during holidays to drive marketplace engagement. No behavioral requirement.", results:"Simple goodwill + marketplace driver", hasResults:false, tags:["bonus points","holiday","marketplace","gifting"], nonDiscount:false },
+  { id:20, merchant:"Crooked Hammock", name:"App-y Hour Hidden Menu", type:"App Downloads", lifecycle:"Engage", lift:"Medium", goal:"Drive app downloads and direct ordering through in-store exclusivity", config:"In-store content block: customers show server the app to unlock App-y Hour pricing. Drives downloads via exclusivity.", results:"Creative in-store + digital integration", hasResults:false, tags:["app downloads","happy hour","hidden menu","direct ordering","in-store"], nonDiscount:true },
+  { id:21, merchant:"Bubbakoos", name:"Gold Bar – Program Migration", type:"Onboarding", lifecycle:"Enroll", lift:"Medium", goal:"Encourage signups ahead of St. Patrick's Day and reward loyalty members", config:"Single campaign sent to existing loyalty members AND customers from old program who hadn't signed up yet.", results:"Program migration launch campaign", hasResults:false, tags:["program migration","signups","acquisition","exclusive reward"], nonDiscount:false },
+  { id:22, merchant:"RibCrib", name:"Points Program Rollout Announcement", type:"Rewards Education", lifecycle:"Enroll", lift:"Low", goal:"Announce new points program to all members clearly", config:"Sent to all loyalty members and email subscribers. Clear communication of new program benefits.", results:"Program launch communication", hasResults:false, tags:["rewards education","program launch","points","communication"], nonDiscount:false },
+  { id:23, merchant:"Bubbakoos", name:"Digital Wallet Launch", type:"Onboarding", lifecycle:"Enroll", lift:"Low", goal:"Drive adoption of stored value digital wallet feature", config:"Targeted to all loyalty signups to announce and drive adoption of new digital wallet.", results:"Feature launch awareness play", hasResults:false, tags:["digital wallet","stored value","feature launch","loyalty members"], nonDiscount:false },
+
+  // ===== FROM GREAT BIG BOOK OF LOYALTY CAMPAIGNS (PDF) =====
+  { id:24, merchant:"Bluestone Lane", name:"Welcome to the Brunch Club", type:"Onboarding", lifecycle:"Activate", lift:"Low", goal:"Reinforce membership value immediately after signup", config:"Warm welcome email emphasizing tangible ongoing benefits: 2x free coffees/week, $25 brunch credits/month, $50 brunch credit/month, partner collaborations.", results:"Drives immediate re-engagement and habit formation", hasResults:false, tags:["welcome","onboarding","benefits communication","VIP feel"], nonDiscount:false },
+  { id:25, merchant:"Modern Market", name:"Unused Intro Reward Reminder", type:"Activation", lifecycle:"Activate", lift:"Low", goal:"Push new members to make first purchase using existing intro reward", config:"Trigger: 3 days and 8 days after signup if no purchase made. Message highlights unused reward with expiry urgency.", results:"Zero-cost conversion — reward already exists", hasResults:false, tags:["activation","first purchase","intro reward","trigger","automation"], nonDiscount:false },
+  { id:26, merchant:"Flower Child", name:"2nd Purchase Thank You Campaign", type:"Activation", lifecycle:"Activate", lift:"Low", goal:"Convert first-time buyers into habitual customers", config:"Automated trigger after first purchase if no second purchase within a set window. Thank-you tone + Order Again CTA.", results:"Proven second purchase conversion approach", hasResults:false, tags:["activation","second purchase","automation","thank you"], nonDiscount:false },
+  { id:27, merchant:"Tocaya", name:"Order 2x in October Challenge", type:"Frequency Challenge", lifecycle:"Engage", lift:"Medium", goal:"Drive repeat visits with a time-limited monthly challenge", config:"'Order 2x this month, earn 25% off.' Sent to loyalty members with urgency. Simple 2-visit trigger for reward.", results:"Clear challenge model with defined reward", hasResults:false, tags:["frequency challenge","monthly challenge","discount","urgency"], nonDiscount:false },
+  { id:28, merchant:"Pincho", name:"Free Delivery on the App", type:"App Downloads", lifecycle:"Engage", lift:"Low", goal:"Shift in-store customers to first-party digital ordering", config:"Campaign to loyalty members who haven't made a digital purchase. Free delivery on app or website on target day.", results:"Digital customers spend 1.25–1.5x more than in-store-only", hasResults:false, tags:["app downloads","digital ordering","free delivery","channel shift"], nonDiscount:false },
+  { id:29, merchant:"Hopdoddy", name:"Drinksgiving Week In-Store Promo", type:"VIP / Daypart", lifecycle:"Engage", lift:"Low", goal:"Drive in-store foot traffic during off-peak weekday window", config:"$5 big-ass glasses 3–6pm Mon–Wed in-store only. Multi-channel customers spend 3x more.", results:"Proven in-store traffic driver during slow hours", hasResults:false, tags:["in-store","daypart","happy hour","foot traffic"], nonDiscount:false },
+  { id:30, merchant:"Marugame Udon", name:"Loyalty Access Pass (VIP Happy Hour)", type:"VIP / Daypart", lifecycle:"Engage", lift:"High", goal:"Drive off-peak traffic without discounts using exclusivity", config:"Members-only Access Pass: spend $15+ between 2–5pm Mon–Thu, get free Tempura Delight. Show email or in-app pass at register.", results:"Status-based rewards vs. discounts — protects margins", hasResults:false, tags:["vip","access pass","off-peak","non-discount","exclusivity"], nonDiscount:true },
+  { id:31, merchant:"&pizza", name:"Behind-the-Scenes Product Launch Event", type:"Brand Engagement", lifecycle:"Engage", lift:"High", goal:"Deepen brand connection with engaged members via exclusive access", config:"Invite-only party for selected loyal members to preview a new product launch. Application required — 'Are you cool?'", results:"30% participation rate on secret menu variant", hasResults:false, tags:["brand engagement","vip event","exclusivity","product launch","community"], nonDiscount:true },
+  { id:32, merchant:"Hopdoddy", name:"Tier-Gated Secret Menu (Burger of the Month)", type:"Menu Launch", lifecycle:"Engage", lift:"Medium", goal:"Create tier progression incentive via exclusive access", config:"Free Burger of the Month only for top-tier members. 7-day redemption window creates urgency. Drives spending toward tier upgrade.", results:"Strong tier progression and urgency combo", hasResults:false, tags:["secret menu","tiers","exclusivity","vip","burger of the month"], nonDiscount:true },
+  { id:33, merchant:"Velvet Taco", name:"Secret Backdoor Menu (Tier-Locked)", type:"Menu Launch", lifecycle:"Engage", lift:"High", goal:"Drive tier progression by gating menu access to top-tier members", config:"'Level up' by purchasing to unlock access to exclusive Backdoor Menu. 3-tier system: Bad Ass and Hard Ass unlock it.", results:"30% participation rate, 13% of members upgraded tier status", hasResults:true, tags:["secret menu","tiers","exclusivity","vip","tier progression"], nonDiscount:true },
+  { id:34, merchant:"Eureka!", name:"VIP Wine Pour Upgrade", type:"VIP / Daypart", lifecycle:"Engage", lift:"Low", goal:"Reward VIP tier members with exclusive non-discount perk", config:"VIP members during LTO: order 6oz Unshackled Cabernet, get complimentary upgrade to 9oz pour for 60 Brownie Points.", results:"Non-discount perk reinforcing VIP status", hasResults:false, tags:["vip","upgrade","non-discount","tier perk","LTO"], nonDiscount:true },
+  { id:35, merchant:"Planta", name:"Gamified Mystery Menu Challenge", type:"Brand Engagement", lifecycle:"Engage", lift:"High", goal:"Drive engagement and menu discovery through interactive gamification", config:"NYT Connections-style puzzle. Group correct words to identify menu items → correct answers tied to rewards in Passport loyalty.", results:"Drives menu discovery + purchase in one creative flow", hasResults:false, tags:["gamification","mystery menu","brand engagement","puzzle","rewards"], nonDiscount:false },
+  { id:36, merchant:"Urbane Cafe", name:"Trick or Treat Promo Code", type:"Holiday / Seasonal", lifecycle:"Engage", lift:"Medium", goal:"Create Halloween excitement and urgency with gamified element", config:"Members enter promo code 'SPOOKY' at checkout to reveal either a trick or a treat. Mix of valuable rewards + playful surprises. One day only.", results:"Halloween campaign case study — high engagement with surprise element", hasResults:true, tags:["holiday","halloween","gamification","urgency","one-day"], nonDiscount:false },
+  { id:37, merchant:"Velvet Taco", name:"Late Night Off-Peak Bonus Points", type:"VIP / Daypart", lifecycle:"Engage", lift:"Medium", goal:"Drive traffic to late-night daypart using points bonus", config:"Customers who order after 9pm earn 10 bonus points. 'Last weekend' urgency message. Thank-you follow-up to late-night visitors.", results:"Drives traffic during unique brand differentiator hours", hasResults:false, tags:["daypart","late night","off-peak","bonus points","brand identity"], nonDiscount:false },
+  { id:38, merchant:"Hopdoddy", name:"Personalized Item Segmentation (Korean Seoul Burger)", type:"Menu Launch", lifecycle:"Engage", lift:"Medium", goal:"Increase relevance through purchase history segmentation", config:"Separate subject lines based on order history: 'Get it again before...' vs. 'Try the Korean Seoul before...' for non-buyers.", results:"Personalization drives higher open and purchase rates", hasResults:false, tags:["personalization","item segmentation","menu launch","email subject"], nonDiscount:false },
+  { id:39, merchant:"R&R BBQ", name:"Reverse Multiplier — Half-Off Rewards", type:"Bonus Points", lifecycle:"Engage", lift:"Medium", goal:"Drive traffic during slow periods by temporarily halving points redemption cost", config:"Cut points required for all marketplace rewards in half for a limited time. '$5 off: was 50 points, now 25 points.'", results:"Increased foot traffic without permanently changing program economics", hasResults:false, tags:["reverse multiplier","slow period","marketplace","urgency","non-discount"], nonDiscount:true },
+  { id:40, merchant:"DIG", name:"Unused Reward Reminder", type:"Rewards Education", lifecycle:"Engage", lift:"Low", goal:"Nudge members back with reward they already earned", config:"Send reminders 3 and 7 days after reward issuance if unredeemed. 'You've got a $5 reward waiting for you' with clear CTA.", results:"Zero-cost incremental revenue — reward already issued", hasResults:false, tags:["unused reward","reminder","automation","trigger"], nonDiscount:false },
+  { id:41, merchant:"Smalls Sliders", name:"Birthday Campaign – Free Milkshake", type:"Brand Engagement", lifecycle:"Engage", lift:"Low", goal:"Celebrate guests on birthday and drive visit with emotional connection", config:"Triggered 1 week before birthday: free milkshake reward. Time-sensitive — 'valid this week only.'", results:"Birthday guests spend more — expected higher AOV", hasResults:false, tags:["birthday","automation","free item","emotional","trigger"], nonDiscount:false },
+  { id:42, merchant:"Mo'Bettahs", name:"Win-Back Multi-Channel (Push + Email)", type:"Win Back", lifecycle:"Retain", lift:"Medium", goal:"Reactivate lapsed customers via multi-channel urgency", config:"Lapsed segment (deviated from usual frequency). Push + email with $5 off. Future iterations: escalate to $7, then free plate.", results:"Proven win-back model — 15x signup lift, 30% digital revenue increase at launch", hasResults:true, tags:["win back","lapsed","multi-channel","push","automation"], nonDiscount:false },
+  { id:43, merchant:"Tacodeli", name:"Win-Back via Menu Rediscovery", type:"Win Back", lifecycle:"Retain", lift:"Low", goal:"Re-engage lapsed members by showcasing familiar + new items", config:"Lapsed segment targeted with 'Rediscover Customer Favorites' email. Personalized by past order history. Highlights new additions.", results:"Menu nostalgia + novelty dual appeal", hasResults:false, tags:["win back","lapsed","menu rediscovery","personalization"], nonDiscount:false },
+  { id:44, merchant:"Bubbakoos", name:"Let's Guac About It Win-Back", type:"Win Back", lifecycle:"Retain", lift:"Low", goal:"Rekindle relationship with humor + immediate tangible value", config:"'Did you forget about us? Let's GUAC about it!' Free 4oz guac dropped in account. Step-by-step guide removes friction for re-engagement.", results:"Combines humor + immediate reward + program education", hasResults:false, tags:["win back","humor","free item","low friction","brand voice"], nonDiscount:false },
+  { id:45, merchant:"Ruby's Diner", name:"Throwback Deals – Classic Menu Returns", type:"Win Back", lifecycle:"Retain", lift:"Low", goal:"Drive traffic with nostalgia — loyalty-exclusive classic menu items", config:"Weekly throwback reward added Monday for members only. Push notification alerts. Members-only frame builds exclusivity.", results:"Nostalgia + exclusivity combo re-engages lapsed loyalists", hasResults:false, tags:["win back","nostalgia","classics","exclusivity","weekly"], nonDiscount:true },
+
+  // ===== NON-DISCOUNT IDEAS =====
+  { id:46, merchant:"Concept Idea", name:"Exclusive Members-Only Brunch Menu", type:"Non-Discount", lifecycle:"Engage", lift:"Low", goal:"Encourage direct ordering via loyalty-exclusive menu access", config:"Hidden menu section in app/web labeled 'Members Only Brunch.' Available until specific date. Creates reason to order direct.", results:"Non-discount perk that drives direct channel ordering", hasResults:false, tags:["non-discount","exclusive menu","direct ordering","members only"], nonDiscount:true },
+  { id:47, merchant:"Concept Idea", name:"VIP Early Access (7 Days Before Launch)", type:"Non-Discount", lifecycle:"Engage", lift:"Low", goal:"Reward top members with insider status via early menu access", config:"VIPs get new menu items a full week before public launch. Clear in-app messaging: 'VIPs get our Tacos a full week early!'", results:"Creates exclusivity at zero food cost premium", hasResults:false, tags:["non-discount","vip early access","exclusivity","new menu","insiders"], nonDiscount:true },
+  { id:48, merchant:"Concept Idea", name:"Tier-Exclusive Menu Item (Gold Only)", type:"Non-Discount", lifecycle:"Engage", lift:"Medium", goal:"Incentivize tier progression via item access — not discounts", config:"Specific item (e.g., 'Fries Galore') only available to Gold tier members. Drives spending to unlock.", results:"Tier-based progression without discount spend", hasResults:false, tags:["non-discount","tiers","exclusivity","gamification","item"], nonDiscount:true },
+  { id:49, merchant:"Concept Idea", name:"Pilot Menu + Feedback Loop", type:"Brand Engagement", lifecycle:"Engage", lift:"Low", goal:"Make loyal customers feel like brand insiders by influencing the menu", config:"'Vote on This Menu' section in app. Loyal customers try pilot items and vote on what goes on the permanent menu.", results:"Deepens brand connection without any discount", hasResults:false, tags:["non-discount","feedback","community","brand engagement","pilot"], nonDiscount:true },
+  { id:50, merchant:"Concept Idea", name:"Skip the Line Pass", type:"Non-Discount", lifecycle:"Engage", lift:"Low", goal:"Give loyalty members a time-saving perk that feels premium", config:"In-app pass shown to team member at door. Available at peak hours — creates real tangible value without food cost.", results:"Zero-cost VIP perk with high perceived value", hasResults:false, tags:["non-discount","skip the line","vip","in-store","convenience"], nonDiscount:true },
+  { id:51, merchant:"Concept Idea", name:"Free Side Add-On Pass", type:"Non-Discount", lifecycle:"Engage", lift:"Low", goal:"Delight members with a food perk that upsells without discounting", config:"Content block pass: show server to add a free side to any order. Available for a limited time window.", results:"Perceived as high value; increases check size via upsell psychology", hasResults:false, tags:["non-discount","free side","upsell","in-store pass","delight"], nonDiscount:true },
+  { id:52, merchant:"Concept Idea", name:"Happy Hour Pricing Pass", type:"Non-Discount", lifecycle:"Engage", lift:"Low", goal:"Drive off-peak visits using time-based access pricing", config:"Members-only happy hour pricing window (e.g., 3–5pm). In-app pass shown at register. Creates incentive to visit during slow periods.", results:"Fills seats during off-peak with loyalty-only pricing", hasResults:false, tags:["non-discount","happy hour","off-peak","daypart","pass"], nonDiscount:true },
+  { id:53, merchant:"Concept Idea", name:"Chef's Table / Tasting Event Invite", type:"Brand Engagement", lifecycle:"Engage", lift:"High", goal:"Create deep brand affinity through exclusive dining experiences", config:"Invite top-tier loyalty members to chef's table, tasting event, or cooking class. Reserve your spot CTA. High exclusivity signal.", results:"Transforms loyal customers into brand advocates", hasResults:false, tags:["non-discount","event","chef's table","vip experience","exclusivity"], nonDiscount:true },
+  { id:54, merchant:"Concept Idea", name:"Loyalty Swag Drop", type:"Brand Engagement", lifecycle:"Engage", lift:"Medium", goal:"Build brand identity and create aspirational loyalty tier perk", config:"Redeem points or reach a tier to receive branded swag (shirt, tote, sticker). Limited edition creates urgency. Can mail it.", results:"Members become walking brand ambassadors", hasResults:false, tags:["non-discount","swag","merch","brand identity","tier perk"], nonDiscount:true },
+  { id:55, merchant:"Concept Idea", name:"Anniversary Throwback – Limited Classics", type:"Win Back", lifecycle:"Retain", lift:"Low", goal:"Drive traffic and brand nostalgia on restaurant anniversary", config:"'It's our 20th anniversary and all the classics are back for a limited time.' Members-only exclusive window to order legacy items.", results:"Nostalgia + loyalty exclusivity = strong re-engagement signal", hasResults:false, tags:["non-discount","anniversary","throwback","nostalgia","limited time"], nonDiscount:true },
+
+  // ===== NEW CAMPAIGNS (2025 SLACK AUDIT) =====
+  { id:56, merchant:"Velvet Taco", name:"January WTF Lineup (LTO Preview)", type:"Menu Launch", lifecycle:"Engage", lift:"Low", goal:"Generate buzz and drive urgency for January LTO lineup via loyalty-exclusive preview", config:"Email to loyalty members previewing the January WTF (Wednesday Taco Feature) lineup ahead of public announcement, creating insider exclusivity and urgency to visit.", results:"$277,267 in attributable revenue in 9 days", hasResults:true, tags:["menu launch","lto","exclusivity","urgency","loyalty preview"], nonDiscount:false },
+  { id:57, merchant:"Roti", name:"$5 Off Online Orders (Channel Launch)", type:"Activation", lifecycle:"Activate", lift:"Low", goal:"Drive first digital order and shift customers to direct online ordering channel", config:"$5 off first online order sent to all loyalty members to announce and incentivize adoption of the new online ordering channel.", results:"$36K in revenue, 1,346 purchases", hasResults:true, tags:["activation","digital ordering","channel shift","online ordering","first purchase"], nonDiscount:false },
+  { id:58, merchant:"Planta", name:"Cart Abandonment", type:"Cart Abandonment", lifecycle:"Engage", lift:"Low", goal:"Recover abandoned carts with a targeted automated follow-up reminder", config:"Automated trigger to customers who added to cart but did not complete purchase. Single follow-up reminder message with no incentive needed.", results:"24.7% purchase rate, $11.8K in attributable revenue", hasResults:true, tags:["cart abandonment","automation","trigger","reminder","no discount"], nonDiscount:false },
+  { id:59, merchant:"Sweetfin", name:"Cart Abandonment A/B (Free Chips vs. No Reward)", type:"Cart Abandonment", lifecycle:"Engage", lift:"Medium", goal:"Test whether a free item incentive improves cart abandonment conversion vs. no offer", config:"A/B test: one variant included a free chips reward; the other was a plain reminder with no offer. Equal audience split to isolate the impact of incentive on conversion.", results:"14%+ purchase rate, $11,049 in revenue. Incentive variant outperformed reminder-only.", hasResults:true, tags:["cart abandonment","a/b test","free item","automation","segmentation"], nonDiscount:false },
+  { id:60, merchant:"Hopdoddy", name:"Winter Storm – Free Fries (Weather Win-Back)", type:"Win Back", lifecycle:"Retain", lift:"Low", goal:"Drive visits from lapsed customers with a timely, weather-responsive free offer", config:"Targeted lapsed customer segment during a winter storm weather event. Free fries reward activated as a reactive campaign tied to real-world conditions.", results:"398 purchases, $12,082 in attributable revenue", hasResults:true, tags:["win back","weather-triggered","reactive","free item","lapsed"], nonDiscount:false },
+  { id:61, merchant:"Daily Provisions", name:"Abandoned Cart Daypart Split (Breakfast / Lunch / Dinner)", type:"Cart Abandonment", lifecycle:"Engage", lift:"Medium", goal:"Improve cart recovery by personalizing the follow-up message to the customer's abandoned daypart", config:"Abandoned carts segmented by time of abandonment — breakfast, lunch, and dinner — each receiving a daypart-specific recovery message with relevant language.", results:"$7,800 combined in 2 weeks across all three daypart segments", hasResults:true, tags:["cart abandonment","daypart","personalization","segmentation","automation"], nonDiscount:false },
+  { id:62, merchant:"Kahwa Coffee", name:"National Latte Day BOGO", type:"Holiday / Seasonal", lifecycle:"Engage", lift:"Low", goal:"Drive visits and awareness on a brand-relevant national day with a compelling BOGO offer", config:"BOGO latte offer sent to all loyalty members for National Latte Day. One-day promotion with urgency messaging and clear call to action.", results:"7.5% purchase rate, $7,600 in attributable revenue", hasResults:true, tags:["holiday","national day","bogo","urgency","seasonal"], nonDiscount:false },
+  { id:63, merchant:"Oak & Stone", name:"Birthday Reward", type:"Brand Engagement", lifecycle:"Engage", lift:"Low", goal:"Celebrate members on their birthday and drive a visit with emotional connection", config:"Automated birthday reward triggered in the member's birthday month. Reward valid for the full month with a warm, personalized message.", results:"11.2% purchase rate, $2.8K in attributable revenue", hasResults:true, tags:["birthday","automation","trigger","emotional","brand engagement"], nonDiscount:false },
+  { id:64, merchant:"Mo'Bettahs", name:"Month of Musabi – BOGO vs. $2 Off A/B", type:"Activation", lifecycle:"Activate", lift:"Medium", goal:"Test whether a BOGO or flat discount drives higher revenue and AOV during a month-long promotion", config:"A/B test across two equal audience segments: BOGO Musabi offer vs. $2 off any order. Run for a full month with 50/50 split.", results:"$2 off variant: same number of purchases as BOGO, but 16% higher AOV. BOGO reduced average ticket size.", hasResults:true, tags:["a/b test","bogo","discount","activation","aov"], nonDiscount:false },
+  { id:65, merchant:"Tucanos Brazilian Grill", name:"Loyalty Transition Campaign Series", type:"Onboarding", lifecycle:"Enroll", lift:"Low", goal:"Drive rapid loyalty program signups during a platform migration to Thanx", config:"Multi-message series communicating the transition to the new Thanx program, key benefits, and urgency to sign up before the go-live date.", results:"431% signup spike on send day", hasResults:true, tags:["onboarding","program migration","signups","urgency","acquisition"], nonDiscount:false },
+  { id:66, merchant:"Sweetfin", name:"Rainy Day Delivery (Weather-Triggered)", type:"Holiday / Seasonal", lifecycle:"Engage", lift:"Low", goal:"Drive delivery orders by reacting to real-time rainy weather with a timely, relevant offer", config:"Campaign triggered on rainy days targeting loyalty members to push delivery. Leverages LA weather patterns — highly timely and contextually relevant.", results:"Creative reactive weather campaign — strong timing and relevance", hasResults:false, tags:["weather-triggered","delivery","reactive","seasonal","creative"], nonDiscount:false },
+  { id:67, merchant:"Bottleneck Management", name:"Monthly Hidden Menu (Rotating)", type:"Non-Discount", lifecycle:"Engage", lift:"Low", goal:"Drive regular repeat visits with a rotating exclusive menu perk for loyalty members only", config:"Monthly hidden menu item available only to loyalty members. Menu rotates each month to create ongoing discovery and give members a compelling reason to keep coming back.", results:"80–200 redemptions per month consistently", hasResults:true, tags:["non-discount","hidden menu","exclusivity","recurring","members only"], nonDiscount:true },
+  { id:68, merchant:"Kahwa Coffee", name:"No Purchase After 7 Days Trigger", type:"Activation", lifecycle:"Activate", lift:"Low", goal:"Nudge new signups to make their first purchase before they disengage from the program", config:"Automated trigger: if no purchase within 7 days of signup, send a follow-up message with a first-purchase incentive and clear CTA. Set once, earns ongoing.", results:"Automated first-purchase nudge — always-on conversion tool", hasResults:false, tags:["activation","first purchase","trigger","automation","onboarding"], nonDiscount:false },
+  { id:69, merchant:"Hattie B's", name:"Welcome Email", type:"Onboarding", lifecycle:"Activate", lift:"Low", goal:"Welcome new members and drive their first purchase immediately after signup", config:"Welcome email triggered at signup. Highlights program benefits and includes a first-purchase incentive with a direct, warm CTA.", results:"$1,369 in attributable revenue in first 7 days", hasResults:true, tags:["welcome","onboarding","first purchase","trigger","activation"], nonDiscount:false },
+  { id:70, merchant:"Oak & Stone", name:"3rd Purchase Escalation (30-Day Nudge → 60-Day $10)", type:"Activation", lifecycle:"Activate", lift:"Medium", goal:"Prevent over-discounting by escalating a reward only when the customer doesn't convert on a lower-cost nudge", config:"Two-stage automation: Day 30 after last purchase sends a no-reward engagement message; if still no purchase by Day 60, sends $10 reward. Conserves reward budget.", results:"Tiered escalation reduces unnecessary discount spend — saves reward cost for customers who need it", hasResults:false, tags:["activation","escalation","automation","second purchase","conservative spend"], nonDiscount:false },
+  { id:71, merchant:"RibCrib", name:"Data-Driven 2nd + 3rd Purchase Automation", type:"Activation", lifecycle:"Activate", lift:"Medium", goal:"Automate second and third purchase nudges timed to actual customer visit cadence data", config:"Trigger timing derived from analysis of historical visit frequency. Second purchase trigger sent at the brand average visit interval; third trigger sent before the expected drop-off window.", results:"Smarter trigger timing based on real data = higher conversion and lower churn", hasResults:false, tags:["activation","data-driven","automation","second purchase","trigger timing"], nonDiscount:false },
+  { id:72, merchant:"Salad House", name:"2nd Purchase A/B (Reward vs. CTA-Only)", type:"Activation", lifecycle:"Activate", lift:"Medium", goal:"Test whether a reward is necessary to convert first-time buyers to a second purchase", config:"A/B test: one group received a discount reward offer; the other received a CTA-only email with no incentive. Equal 50/50 audience split.", results:"Revenue nearly identical between variants; reward variant cost $1K more in offer spend — CTA-only was more efficient", hasResults:true, tags:["a/b test","activation","second purchase","reward test","cost efficiency"], nonDiscount:false }
+];
+
+function getLiftClass(lift) {
+  if (lift === 'Low') return 'low';
+  if (lift === 'Medium') return 'medium';
+  if (lift === 'High') return 'high';
+  return 'low';
+}
+
+function getLiftLabel(lift) {
+  if (lift === 'Low') return '🟢 Low Lift';
+  if (lift === 'Medium') return '🟡 Medium Lift';
+  if (lift === 'High') return '🟠 High Lift';
+  return lift;
+}
+
+function getTypeClass(type) {
+  const t = type.toLowerCase();
+  if (t.includes('win back')) return 'type-winback';
+  if (t.includes('activation')) return 'type-activation';
+  if (t.includes('cart')) return 'type-cart';
+  if (t.includes('frequency')) return 'type-frequency';
+  if (t.includes('bonus')) return 'type-bonus';
+  if (t.includes('holiday')) return 'type-holiday';
+  if (t.includes('app') || t.includes('download')) return 'type-app';
+  if (t.includes('vip') || t.includes('daypart')) return 'type-vip';
+  if (t.includes('menu')) return 'type-menu';
+  if (t.includes('non-discount')) return 'type-nondiscount';
+  if (t.includes('brand')) return 'type-brand';
+  if (t.includes('reward') || t.includes('education')) return 'type-rewards';
+  if (t.includes('onboard') || t.includes('welcome')) return 'type-onboarding';
+  return 'type-default';
+}
+
+function getLifecycleClass(lc) {
+  if (!lc) return '';
+  const l = lc.toLowerCase();
+  if (l === 'enroll') return 'lifecycle-tag enroll';
+  if (l === 'activate') return 'lifecycle-tag activate';
+  if (l === 'engage') return 'lifecycle-tag engage';
+  if (l === 'retain') return 'lifecycle-tag retain';
+  return 'lifecycle-tag';
+}
+
+// ===== SMART SEARCH =====
+const STOP_WORDS = new Set(['do','we','have','any','that','ran','a','an','the','is','are','was','were','has','had','been','be','for','to','of','in','on','at','with','and','or','can','could','would','should','did','does','some','their','our','this','these','those','about','how','what','which','who','when','where','why','if','not','no','i','my','me','us','they','them','it','its','give','show','find','get','want','need','looking','something','previously','ever','before','already','maybe','also','too','vs','versus']);
+
+const SYNONYMS = {
+  'second visit': ['second purchase','2nd purchase','activation'],
+  'second purchase': ['2nd purchase','activation','second visit'],
+  '2nd': ['second','2nd purchase'],
+  'inactive': ['win back','lapsed','re-engagement','winback'],
+  'dormant': ['win back','lapsed','re-engagement'],
+  'churn': ['win back','lapsed','retain'],
+  'churned': ['win back','lapsed','retain'],
+  'lapsed': ['win back','lapsed','re-engagement'],
+  'lost': ['win back','lapsed'],
+  'bring back': ['win back','lapsed','re-engagement'],
+  're-engage': ['win back','re-engagement','lapsed'],
+  'reengage': ['win back','re-engagement','lapsed'],
+  'reactivate': ['win back','re-engagement','lapsed'],
+  'cart': ['cart abandonment','abandoned cart'],
+  'abandoned': ['cart abandonment','abandoned cart'],
+  'abandonment': ['cart abandonment'],
+  'checkout': ['cart abandonment','cart'],
+  'frequency': ['frequency challenge','habit','visits'],
+  'visit more': ['frequency','habit'],
+  'visits': ['frequency','visit'],
+  'habit': ['frequency challenge','habit building'],
+  'gamification': ['frequency challenge','gamified','challenge'],
+  'game': ['gamification','challenge'],
+  'challenge': ['frequency challenge'],
+  'points': ['bonus points','points multiplier','double points'],
+  'double points': ['bonus points','points multiplier'],
+  'multiplier': ['points multiplier','bonus points'],
+  'bonus': ['bonus points'],
+  'app': ['app downloads','push notifications'],
+  'download': ['app downloads'],
+  'push': ['push notifications','app downloads'],
+  'notification': ['push notifications'],
+  'holiday': ['seasonal','holiday','national day'],
+  'seasonal': ['holiday','seasonal'],
+  'national day': ['holiday','national day'],
+  'new member': ['onboarding','welcome','first purchase'],
+  'new customer': ['onboarding','welcome','activation'],
+  'welcome': ['onboarding','welcome'],
+  'onboard': ['onboarding','welcome'],
+  'first purchase': ['onboarding','activation','first purchase'],
+  'signup': ['onboarding','acquisition','signups'],
+  'acquisition': ['signups','acquisition','loyalty exclusive'],
+  'vip': ['vip','exclusive','high value'],
+  'exclusive': ['vip','loyalty exclusive','exclusivity'],
+  'loyalty exclusive': ['vip','exclusivity','menu launch'],
+  'secret menu': ['hidden menu','secret menu','exclusivity'],
+  'hidden menu': ['secret menu','app downloads'],
+  'daypart': ['daypart','breakfast','lunch','happy hour'],
+  'breakfast': ['daypart','breakfast','sku'],
+  'lunch': ['daypart','lunch','vip'],
+  'slow day': ['daypart','slow period'],
+  'happy hour': ['app downloads','daypart','happy hour'],
+  'non-discount': ['non-discount','nondiscount','no discount'],
+  'no discount': ['non-discount','nondiscount'],
+  'without discount': ['non-discount','nondiscount'],
+  'reward': ['reward','bonus points','discount'],
+  'menu launch': ['new menu','menu launch','new item'],
+  'new item': ['menu launch','new item','teaser'],
+  'menu item': ['menu launch','new item'],
+  'launch': ['menu launch','program launch','feature launch'],
+  'contest': ['brand engagement','ugc','contest'],
+  'community': ['brand engagement','community'],
+  'cause': ['cause marketing','brand engagement'],
+  'migration': ['program migration'],
+  'migrate': ['program migration'],
+  'education': ['rewards education','onboarding'],
+  'marketplace': ['rewards education','marketplace'],
+  'wallet': ['digital wallet','stored value'],
+  'digital wallet': ['digital wallet','stored value'],
+  'sku': ['sku targeting','daypart'],
+  'upsell': ['upsell','daypart','vip'],
+  'control group': ['a/b test','control group'],
+  'test': ['a/b test','testing'],
+  'ab test': ['a/b test'],
+  'a/b': ['a/b test'],
+  'series': ['automation','series','frequency challenge'],
+  'automation': ['automation','automated','cart abandonment'],
+  'segment': ['segmentation','custom segment'],
+  'tier': ['tiers','gamification'],
+  'bogo': ['bogo','buy one get one'],
+  'buy one': ['bogo'],
+  'free': ['free item','reward','high value reward'],
+};
+
+function tokenizeQuery(query) {
+  const q = query.toLowerCase();
+  // First try full-phrase synonym matches
+  const tokens = new Set();
+  for (const [phrase, expansions] of Object.entries(SYNONYMS)) {
+    if (q.includes(phrase)) {
+      expansions.forEach(e => tokens.add(e));
+      tokens.add(phrase);
+    }
+  }
+  // Then split into individual words and expand those too
+  const words = q.split(/\s+/).filter(w => w.length > 2 && !STOP_WORDS.has(w));
+  words.forEach(w => {
+    tokens.add(w);
+    if (SYNONYMS[w]) SYNONYMS[w].forEach(e => tokens.add(e));
+  });
+  return Array.from(tokens);
+}
+
+// ===== SMART EMPTY STATE ADVISOR =====
+const STRATEGY_INTENTS = [
+  {
+    match: ['win back','lapsed','inactive','churn','re-engage','dormant','lost','reactivate'],
+    title: 'Win-Back Campaign Strategy',
+    icon: '🔁',
+    headline: 'No exact match — here\'s how to build a win-back campaign on Thanx',
+    body: `Win-back campaigns target customers who've gone silent. On Thanx, you can segment by last purchase date and trigger automated campaigns at the 30, 60, or 90-day mark.`,
+    steps: [
+      'Create a <strong>custom segment</strong> filtering customers with no purchase in 60–90 days',
+      'Send a <strong>2-day expiry reward</strong> ($5 off or a free item) to create urgency',
+      'Personalize copy around what they\'re missing — reference menu items or seasonal offers',
+      'Add a <strong>control group</strong> (10–20%) to measure true incremental lift',
+      'Follow up at 11 months with a final "last call" before removing from active list'
+    ],
+    tip: 'Sweetfin\'s 11-month win-back converted 0.6% but revealed their list health — sometimes the real win is knowing who to stop marketing to.',
+    lift: 'Medium',
+    type: 'Win Back'
+  },
+  {
+    match: ['cart','abandoned','abandonment','checkout'],
+    title: 'Cart Abandonment Recovery',
+    icon: '🛒',
+    headline: 'No exact match — here\'s how to recover abandoned carts on Thanx',
+    body: `Thanx can trigger automated campaigns to customers who added items but didn\'t complete checkout. The 24-hour window is the sweet spot before intent cools.`,
+    steps: [
+      'Enable <strong>automated cart abandonment trigger</strong> in Thanx — no manual list needed',
+      'Test two variants: a <strong>reward incentive</strong> ($5 off) vs. a <strong>reminder-only</strong> message',
+      'Set message to fire <strong>24 hours after abandonment</strong> for highest re-engagement',
+      'Keep copy direct: "You left something behind" with a clear CTA to complete order',
+      'Track <strong>attributable revenue</strong> per send to calculate ROI over 30 days'
+    ],
+    tip: 'RibCrib\'s A/B cart abandonment test generated $58K in attributable revenue with a 13%+ purchase rate — one of the highest-performing automation types on the platform.',
+    lift: 'Medium',
+    type: 'Cart Abandonment'
+  },
+  {
+    match: ['frequency','visit more','visits','habit','challenge','come back more','recurring'],
+    title: 'Frequency Challenge Strategy',
+    icon: '📈',
+    headline: 'No exact match — here\'s how to build a frequency challenge on Thanx',
+    body: `Frequency challenges reward customers for hitting visit milestones. Research shows 3 visits in a window significantly increases long-term retention — use Thanx automations to trigger at each milestone.`,
+    steps: [
+      'Design a <strong>3-part automated series</strong>: Announce challenge → Trigger at visit 1 → Reward at visit 3',
+      'Set a <strong>time-bound window</strong> (e.g., "Visit 3x in January") to create urgency',
+      'Use a <strong>meaningful reward</strong> at completion — $10 off or free item drives highest completion',
+      'Consider <strong>tiered rewards</strong> for 3, 5, and 7 visits to keep heavy users engaged longer',
+      'Send a mid-challenge <strong>progress update</strong> ("You\'re halfway there!") to reduce drop-off'
+    ],
+    tip: 'The 3-visit threshold is the loyalty tipping point — customers who visit 3+ times in a month are 2–3x more likely to become regulars. Modern Market and Bubbakoos both use this structure.',
+    lift: 'High',
+    type: 'Frequency Challenge'
+  },
+  {
+    match: ['app','download','push','notification','mobile'],
+    title: 'App Download Drive Strategy',
+    icon: '📱',
+    headline: 'No exact match — here\'s how to drive app downloads on Thanx',
+    body: `App downloads unlock push notifications — which have dramatically higher open rates than email. The key tactic: make something valuable only accessible through the app.`,
+    steps: [
+      'Create an <strong>app-exclusive reward</strong> (free item or high-value offer) only claimable in-app',
+      'Email your full loyalty list announcing the exclusive — create FOMO for non-app users',
+      'For in-store: use a <strong>hidden menu content block</strong> that customers show their server',
+      'Set push notification <strong>opt-in as a required step</strong> to receive the reward',
+      'Track daily download velocity — Velvet Taco saw 4x daily downloads on campaign day'
+    ],
+    tip: 'Velvet Taco went from 300 to 1,200 app downloads/day by making a free taco available ONLY via push notification. Exclusivity is the unlock — not the discount itself.',
+    lift: 'Medium',
+    type: 'App Downloads'
+  },
+  {
+    match: ['holiday','seasonal','national day','event','special day','occasion'],
+    title: 'Holiday & Seasonal Campaign Strategy',
+    icon: '🎉',
+    headline: 'No exact match — here\'s how to leverage holidays on Thanx',
+    body: `Holiday campaigns work because customers expect them — the key is brand-fit. Pick micro-holidays that align with your merchant\'s identity and use points multipliers for low-lift execution.`,
+    steps: [
+      'Identify <strong>brand-aligned micro-holidays</strong> (National Pizza Day, Taco Tuesday, Leap Day)',
+      'Run a <strong>1-day points multiplier</strong> (2x–4x) to create urgency without deep discounting',
+      'Email your full loyalty list <strong>day-of</strong> with a clear expiration ("Today only")',
+      'For bigger holidays, add a <strong>teaser send</strong> 3–5 days prior to build anticipation',
+      'Pair with an <strong>exclusive menu item</strong> available only during the holiday window'
+    ],
+    tip: 'Dog Haus ran a Leap Day 4x points campaign — a creative, once-every-4-years event that felt genuinely special. The quirkier the holiday, the more memorable the campaign.',
+    lift: 'Low',
+    type: 'Holiday / Seasonal'
+  },
+  {
+    match: ['new member','new customer','welcome','onboard','first purchase','first visit','signup','sign up','just joined'],
+    title: 'Onboarding & First Purchase Strategy',
+    icon: '👋',
+    headline: 'No exact match — here\'s how to nail onboarding on Thanx',
+    body: `The first 30 days after signup are the highest-leverage window in the customer lifecycle. A customer who makes a second purchase within 30 days is significantly more likely to become a long-term loyalist.`,
+    steps: [
+      'Send a <strong>welcome email immediately</strong> after signup explaining program benefits',
+      'Include a <strong>first-purchase incentive</strong> with a short expiry (7–14 days) to drive urgency',
+      'Follow up at <strong>day 7 if no purchase</strong> with a reminder or elevated offer',
+      'Trigger a <strong>second-purchase automation</strong> after the first visit fires',
+      'Consider a <strong>challenge format</strong>: "Visit 3x in your first month to unlock [reward]"'
+    ],
+    tip: 'The window between signup and first purchase is the biggest drop-off point for most merchants. Kahwa Coffee and Bluestone Lane both use welcome sequences to close this gap.',
+    lift: 'Low',
+    type: 'Onboarding'
+  },
+  {
+    match: ['bonus points','extra points','points gift','double points','multiplier','points day'],
+    title: 'Bonus Points Campaign Strategy',
+    icon: '⭐',
+    headline: 'No exact match — here\'s how to run bonus points campaigns on Thanx',
+    body: `Bonus points campaigns are one of the lowest-lift, highest-engagement tools in Thanx. They drive visits without deep discounting and increase marketplace utilization.`,
+    steps: [
+      'Choose a <strong>specific trigger</strong>: slow day, holiday, challenge completion, or loyalty anniversary',
+      'Set a <strong>meaningful multiplier</strong> — 2x is table stakes; 3x–4x creates real urgency',
+      'Target <strong>all loyalty members</strong> for broad engagement, or use custom segments for VIP treatment',
+      'Pair with a <strong>marketplace callout</strong> to educate members on what they can redeem for',
+      'Consider a <strong>limited-time window</strong> (e.g., "Wednesdays only" or "this weekend") for urgency'
+    ],
+    tip: 'Bubbakoos uses Double Points Wednesdays to combat their slowest day of the week — no discount needed. Next Level Burger gifted 75 bonus points during holidays to spike marketplace engagement.',
+    lift: 'Low',
+    type: 'Bonus Points'
+  },
+  {
+    match: ['vip','exclusive','high value','top customers','best customers','loyal customers'],
+    title: 'VIP & Exclusive Access Strategy',
+    icon: '👑',
+    headline: 'No exact match — here\'s how to create VIP campaigns on Thanx',
+    body: `VIP campaigns make your best customers feel seen — and they drive real revenue from your most valuable segment. On Thanx, you can segment by lifetime spend, visit frequency, or recency.`,
+    steps: [
+      'Define your <strong>VIP segment</strong>: top 10–20% by spend, or customers with 10+ lifetime visits',
+      'Offer <strong>early access</strong> (7-day preview) to new menu items before general launch',
+      'Create a <strong>VIP-exclusive reward</strong> only available to this segment',
+      'Add a <strong>control group</strong> to measure whether VIPs would have visited anyway',
+      'Follow with a <strong>broader launch</strong> to all members, leveraging VIP buzz as social proof'
+    ],
+    tip: 'Bluestone Lane\'s 3-pronged VIP daypart strategy — early access for VIPs, targeted for lunch regulars, targeted for morning regulars, all with control groups — is a textbook example of sophisticated segmentation.',
+    lift: 'High',
+    type: 'VIP / Daypart'
+  },
+  {
+    match: ['non-discount','no discount','without discount','non discount','reward without','not a discount','points instead','experience','experiential'],
+    title: 'Non-Discount Reward Strategy',
+    icon: '✨',
+    headline: 'No exact match — here\'s how to reward without discounting on Thanx',
+    body: `Non-discount rewards build brand equity instead of training customers to wait for deals. These reward access, recognition, and exclusivity — things money can\'t buy.`,
+    steps: [
+      'Offer <strong>VIP early access</strong> to new menu items (7 days before public launch)',
+      'Create a <strong>members-only menu item</strong> that can\'t be ordered any other way',
+      'Use <strong>skip-the-line passes</strong> or exclusive seating for high-traffic periods',
+      'Host a <strong>chef\'s table or tasting event</strong> for top-tier loyalty members',
+      'Offer <strong>free meal upsizes</strong>, unlimited toppings, or bonus sides instead of $ off'
+    ],
+    tip: 'Non-discount rewards are best for merchants worried about margin erosion. Eureka!\'s loyalty-exclusive Pastrami Burger drove signups without a single dollar off — the exclusivity WAS the reward.',
+    lift: 'Medium',
+    type: 'Menu Launch / Exclusive'
+  },
+  {
+    match: ['menu','new item','launch','food','dish','burger','pizza','taco','item','product'],
+    title: 'Menu Launch Campaign Strategy',
+    icon: '🍽️',
+    headline: 'No exact match — here\'s how to launch a new menu item on Thanx',
+    body: `New menu items are a natural hook for loyalty campaigns. Thanx lets you create exclusivity, build buzz before launch, and measure direct revenue attribution from the campaign.`,
+    steps: [
+      'Send a <strong>teaser email</strong> 5–7 days before launch — don\'t reveal everything',
+      'Give <strong>loyalty members first access</strong> (even 24–48 hours early) to make them feel special',
+      'Include a <strong>first-week incentive</strong> for trying the new item (bonus points or small reward)',
+      'Follow with a <strong>full announcement</strong> to your entire list at launch',
+      'Use <strong>item-specific segmentation</strong> to re-engage customers who ordered similar items'
+    ],
+    tip: 'Sweetfin\'s "Cali Bowl Teaser" and Tocaya\'s teaser sequence show that a 2-part tease + launch structure consistently outperforms a single announcement.',
+    lift: 'Low',
+    type: 'Menu Launch / Exclusive'
+  },
+  {
+    match: ['brand','community','event','engagement','story','behind scenes','ugc','contest','social'],
+    title: 'Brand Engagement Campaign Strategy',
+    icon: '💬',
+    headline: 'No exact match — here\'s how to run brand engagement campaigns on Thanx',
+    body: `Brand engagement campaigns build affinity beyond transactions. They work best when they tap into what makes your merchant genuinely unique — their story, values, or community.`,
+    steps: [
+      'Identify a <strong>brand moment</strong>: anniversary, community event, cause, or milestone',
+      'Invite customers to <strong>participate, not just receive</strong> — contest, poll, or UGC submission',
+      'Tie brand engagement to a <strong>light purchase incentive</strong> (BOGO or bonus points) to close the loop',
+      'Use <strong>Thanx content blocks</strong> to tell the story visually in the loyalty experience',
+      'Follow up with participants to share <strong>outcomes</strong> (contest winner, money raised, etc.)'
+    ],
+    tip: 'Roti\'s "Submit a Flavor Contest" and Sweetfin\'s Beach Cleanup + BOGO show that cause/community campaigns earn disproportionate loyalty — customers who participate become advocates.',
+    lift: 'High',
+    type: 'Brand Engagement'
+  },
+  {
+    match: ['daypart','breakfast','lunch','dinner','morning','afternoon','slow','traffic','time of day'],
+    title: 'Daypart Targeting Strategy',
+    icon: '⏰',
+    headline: 'No exact match — here\'s how to target specific dayparts on Thanx',
+    body: `Thanx can segment customers by when they typically visit, what they order, and how often — making it possible to drive traffic at specific times of day without blanket promotions.`,
+    steps: [
+      'Create a <strong>custom segment</strong> of customers who have purchased during the target daypart',
+      'Offer a <strong>time-limited reward</strong> valid only during the slow window (e.g., 2–5pm)',
+      'For breakfast/lunch push: target customers who order breakfast/lunch SKUs specifically',
+      'Consider a <strong>VIP-first rollout</strong> with a control group to measure true incremental lift',
+      'Test <strong>bonus points during the daypart</strong> vs. a discount to see which drives more visits'
+    ],
+    tip: 'Bluestone Lane\'s multi-pronged lunch strategy — VIPs, lunch regulars, and morning regulars each got different treatment — generated cleaner attribution than a blanket campaign.',
+    lift: 'Medium',
+    type: 'VIP / Daypart'
+  }
+];
+
+// ===== DYNAMIC CATCH-ALL STRATEGY BUILDER =====
+// Maps keywords extracted from any query to relevant Thanx platform tactics
+const KEYWORD_TACTIC_MAP = {
+  // Sports / events
+  'march madness': { theme: 'March Madness', emoji: '🏀', context: 'a multi-week sports tournament with natural bracket energy', tactics: ['bracket-style frequency challenge','game-day points multipliers','pick\'em loyalty reward','watch party in-store promo'] },
+  'super bowl': { theme: 'Super Bowl', emoji: '🏈', context: 'the biggest sports viewing occasion of the year', tactics: ['game-day points multiplier','party catering pre-order with bonus points','halftime exclusive reward','score prediction challenge'] },
+  'world cup': { theme: 'World Cup', emoji: '⚽', context: 'a month-long global sports event with daily viewing occasions', tactics: ['match-day bonus points','country bracket challenge','viewing party exclusive menu','tournament-long frequency challenge'] },
+  'playoffs': { theme: 'Playoffs / Championship', emoji: '🏆', context: 'a high-energy sports moment driving group dining and delivery', tactics: ['game-day multiplier','watch party exclusive','bracket prediction reward','series-long frequency challenge'] },
+  'game day': { theme: 'Game Day', emoji: '🏟️', context: 'recurring high-traffic sports occasions', tactics: ['daypart multiplier on game days','group order bonus points','exclusive game-day menu item','push notification reminder 2hrs before kickoff'] },
+  'football': { theme: 'Football Season', emoji: '🏈', context: 'a full season of weekly game-day occasions', tactics: ['weekly game-day multiplier','season-long frequency challenge','tailgate menu exclusive','fan loyalty tier upgrade'] },
+  'basketball': { theme: 'Basketball Season', emoji: '🏀', context: 'a long season with playoff potential for major moments', tactics: ['game night points multiplier','bracket challenge','season-opener exclusive reward','playoff-push frequency challenge'] },
+  'baseball': { theme: 'Baseball Season', emoji: '⚾', context: 'an 162-game season with opening day and playoff moments', tactics: ['opening day double points','walk-off reward (instant win mechanic)','7th inning stretch promo','postseason frequency challenge'] },
+  'stanley cup': { theme: 'Stanley Cup / Hockey', emoji: '🏒', context: 'playoff hockey with intense fan loyalty', tactics: ['power play bonus points','overtime multiplier','playoff series challenge','puck-drop exclusive menu item'] },
+  'sports': { theme: 'Sports Promotion', emoji: '🏅', context: 'a sports-adjacent campaign moment', tactics: ['game-day points multiplier','frequency challenge tied to season','exclusive menu item for fans','watch party in-store activation'] },
+  // Seasonal moments
+  'summer': { theme: 'Summer', emoji: '☀️', context: 'the highest-traffic season for many restaurant concepts', tactics: ['summer frequency challenge (visit 5x, earn reward)','seasonal menu exclusive for loyalty members','beach/outdoor daypart multiplier','back-to-school countdown offer'] },
+  'back to school': { theme: 'Back to School', emoji: '📚', context: 'a transition moment when routines reset — ideal for habit-building', tactics: ['new routine frequency challenge','student/family segment bonus points','first-week-back exclusive reward','morning daypart multiplier'] },
+  'new year': { theme: 'New Year', emoji: '🎊', context: 'a resolution mindset moment ideal for habit-formation campaigns', tactics: ['January frequency challenge (build a new habit)','resolution-aligned menu spotlight','first visit of the year double points','fresh start win-back for lapsed members'] },
+  'valentine': { theme: 'Valentine\'s Day', emoji: '💝', context: 'a gifting and special occasion dining moment', tactics: ['date night exclusive menu item','gift a reward to a friend mechanic','couples bonus points (2x for dining in)','early access for loyalty members to Valentine\'s reservation'] },
+  'mothers day': { theme: 'Mother\'s Day', emoji: '🌸', context: 'one of the highest-volume restaurant days of the year', tactics: ['pre-order bonus points','gift-a-reward mechanic for loyalty members','exclusive brunch item for members','VIP early reservation access'] },
+  'thanksgiving': { theme: 'Thanksgiving', emoji: '🦃', context: 'a pre-holiday and Black Friday weekend dining occasion', tactics: ['catering pre-order bonus points','family-size order multiplier','gratitude campaign (thank loyal members with a surprise reward)','Black Friday shopping fuel exclusive'] },
+  'christmas': { theme: 'Holiday Season', emoji: '🎄', context: 'a gifting and gathering season with 4–6 weeks of campaign runway', tactics: ['12 days of exclusive menu items','gift a loyalty reward','holiday bonus points bundle','year-in-review VIP celebration'] },
+  // Business goals
+  'catering': { theme: 'Catering & Group Orders', emoji: '🍱', context: 'driving high-AOV catering orders through loyalty', tactics: ['catering order bonus points','exclusive catering menu for loyalty members','advance order reward (book 48hrs ahead, get bonus points)','corporate loyalty tier for repeat catering clients'] },
+  'delivery': { theme: 'Delivery & Online Orders', emoji: '📦', context: 'increasing digital order frequency and AOV', tactics: ['first online order bonus points','delivery-only exclusive menu item','spend threshold reward ($25+ order = bonus points)','abandoned cart automation for delivery'] },
+  'birthday': { theme: 'Birthday Campaigns', emoji: '🎂', context: 'high-intent occasions when customers actively want to celebrate', tactics: ['birthday week free item (auto-triggered)','birthday month double points','BOGO birthday reward for bringing a friend','birthday VIP experience (skip the line, exclusive seating)'] },
+  'referral': { theme: 'Referral & Friend Campaigns', emoji: '👥', context: 'leveraging existing customers to acquire new ones', tactics: ['refer a friend = bonus points for both','gift a reward via email to a non-member friend','bring a friend challenge (visit together 3x = reward)','social share exclusive reward'] },
+  'grand opening': { theme: 'New Location / Grand Opening', emoji: '🎉', context: 'driving awareness and trials for a new location', tactics: ['double points at new location for first month','new location exclusive menu item','opening week VIP preview for existing loyalty members','geo-targeted push notification to nearby members'] },
+  'anniversary': { theme: 'Brand Anniversary', emoji: '🥂', context: 'celebrating a milestone while rewarding your most loyal customers', tactics: ['throwback menu item (first item ever offered)','anniversary bonus points for members who\'ve been with you longest','year-in-review gift to top spenders','exclusive anniversary challenge: visit X times this week'] },
+};
+
+function buildDynamicStrategy(query) {
+  const q = query.toLowerCase();
+  // Check keyword map for specific themes
+  for (const [phrase, data] of Object.entries(KEYWORD_TACTIC_MAP)) {
+    if (q.includes(phrase)) {
+      return buildThemeStrategy(query, data, phrase);
+    }
+  }
+  // Fuzzy: check individual words against map keys
+  const words = q.split(/\s+/).filter(w => w.length > 3);
+  for (const word of words) {
+    for (const [phrase, data] of Object.entries(KEYWORD_TACTIC_MAP)) {
+      if (phrase.includes(word) || word.includes(phrase.split(' ')[0])) {
+        return buildThemeStrategy(query, data, phrase);
+      }
+    }
+  }
+  // Ultimate fallback: generic strategy builder
+  return buildGenericStrategy(query);
+}
+
+function buildThemeStrategy(query, data, matchedPhrase) {
+  const tactics = data.tactics;
+  return {
+    icon: data.emoji,
+    headline: `Here's how I'd pitch a ${data.theme} campaign to a merchant`,
+    body: `We don't have a saved example for this yet — but ${data.theme} is ${data.context}. Here's how to build something compelling on the Thanx platform:`,
+    steps: [
+      `<strong>Anchor it to a points multiplier</strong> — run 2x–4x points during ${data.theme} windows. Low lift, high excitement, no deep discounting needed.`,
+      `<strong>${tactics[0].charAt(0).toUpperCase() + tactics[0].slice(1)}</strong> — this is the angle that makes it feel custom to the moment, not just a generic promo.`,
+      `<strong>${tactics[1].charAt(0).toUpperCase() + tactics[1].slice(1)}</strong> — pair with a push notification timed to the moment (e.g., 1–2 hours before tip-off / event start).`,
+      `<strong>Segment smartly</strong>: send to all loyalty members first, then follow up with a VIP-only escalation (higher reward, earlier access) for your top 20% by spend.`,
+      `<strong>Add a control group</strong> (10–15% holdout) to prove incremental lift — this makes your QBR story much stronger when you show the merchant actual attributable revenue.`
+    ],
+    tip: `The ${data.theme} angle matters less than the mechanic behind it — a bracket-themed frequency challenge works the same as any frequency challenge, but the theme gives your merchant a reason to send it NOW instead of "sometime this quarter." Theme = urgency.`,
+    lift: 'Medium',
+    type: 'Holiday / Seasonal',
+    isGenerated: true
+  };
+}
+
+function buildGenericStrategy(query) {
+  // Extract the most meaningful phrase to surface back to the user
+  const words = query.replace(/[?!.,]/g, '').split(/\s+/).filter(w => w.length > 3 && !['what','have','want','would','could','should','their','with','this','that','about','show','find','give','tell','idea','need','some','ways','help'].includes(w.toLowerCase()));
+  const topic = words.slice(0, 3).join(' ') || 'this goal';
+  return {
+    icon: '🧠',
+    headline: `No saved example yet — here's how I'd approach a "${topic}" campaign`,
+    body: `We haven't run this exact campaign type before, but every successful Thanx campaign uses the same building blocks. Here's how to structure a pitch from scratch:`,
+    steps: [
+      `<strong>Define the outcome first</strong> — is this about acquisition (new loyalty signups), activation (first purchase), engagement (visit frequency), or retention (win back lapsed)? The mechanic flows from the outcome.`,
+      `<strong>Pick your mechanic</strong>: Points multiplier (low lift, broad appeal), Custom reward (medium lift, higher impact), or Multi-part challenge (high lift, strongest habit formation). Match complexity to merchant appetite.`,
+      `<strong>Build your segment</strong>: "Send to all" is your baseline. If the merchant has 6+ months of data, custom segments by recency, frequency, or item purchased will outperform blasting the full list.`,
+      `<strong>Add urgency and exclusivity</strong> — every campaign converts better with a time limit (3–7 days) and a reason why loyalty members get it first. "Loyalty member exclusive" is your hook.`,
+      `<strong>Measure it right</strong>: set up a control group before launch. Attributable revenue per send is your headline metric — it's what turns a pilot into a recurring playbook.`
+    ],
+    tip: `When pitching a new campaign idea to a merchant who's never done it before, lead with the simplest version first: one segment, one message, one reward. Prove the concept, then build complexity. A low-lift win beats a sophisticated campaign that never launches.`,
+    lift: 'Medium',
+    type: 'Holiday / Seasonal',
+    isGenerated: true
+  };
+}
+
+function getStrategyForQuery(query) {
+  if (!query) return null;
+  const q = query.toLowerCase();
+  let best = null;
+  let bestScore = 0;
+  for (const intent of STRATEGY_INTENTS) {
+    const score = intent.match.filter(kw => q.includes(kw)).length;
+    if (score > bestScore) { bestScore = score; best = intent; }
+  }
+  // Fallback: check tokenized keywords
+  if (!best) {
+    const tokens = tokenizeQuery(query);
+    for (const intent of STRATEGY_INTENTS) {
+      const score = intent.match.filter(kw => tokens.some(t => t.includes(kw) || kw.includes(t))).length;
+      if (score > bestScore) { bestScore = score; best = intent; }
+    }
+  }
+  // Always return something — use dynamic builder if no intent matched
+  return best || buildDynamicStrategy(query);
+}
+
+function renderStrategyPanel(strategy, query) {
+  const liftColor = strategy.lift === 'Low' ? '#059669' : strategy.lift === 'Medium' ? '#d97706' : '#ea580c';
+  const liftBg = strategy.lift === 'Low' ? '#ecfdf5' : strategy.lift === 'Medium' ? '#fffbeb' : '#fff7ed';
+  const eyebrow = strategy.isGenerated ? '✦ Campaign Advisor · Generated for your search' : 'Campaign Advisor · Based on your search';
+  const tipLabel = strategy.isGenerated ? '💡 CSM tip' : '💡 Real example from the platform';
+  return `
+  <div class="strategy-panel" style="grid-column:1/-1;">
+    <div class="strategy-header">
+      <span class="strategy-icon">${strategy.icon}</span>
+      <div>
+        <div class="strategy-eyebrow">${eyebrow}</div>
+        <div class="strategy-title">${strategy.headline}</div>
+      </div>
+    </div>
+    <p class="strategy-body">${strategy.body}</p>
+    <div class="strategy-steps-label">How to build this on Thanx:</div>
+    <ol class="strategy-steps">
+      ${strategy.steps.map(s => `<li>${s}</li>`).join('')}
+    </ol>
+    <div class="strategy-tip">
+      <span class="strategy-tip-label">${tipLabel}</span>
+      ${strategy.tip}
+    </div>
+    <div class="strategy-footer">
+      <span style="font-size:12px;color:var(--text-muted);">Closest campaign type:</span>
+      <span style="font-size:12px;font-weight:600;color:var(--text-secondary);">${strategy.type}</span>
+      <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:${liftBg};color:${liftColor};">${strategy.lift} Lift</span>
+      <button class="strategy-filter-btn" onclick="applyStrategyFilter('${strategy.type}')">Browse similar campaigns →</button>
+    </div>
+  </div>`;
+}
+
+function applyStrategyFilter(type) {
+  const pill = Array.from(document.querySelectorAll('.filter-pill')).find(p => p.dataset.filter === type || p.dataset.filter.includes(type.split(' ')[0]));
+  if (pill) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeFilter = pill.dataset.filter;
+  }
+  document.getElementById('searchInput').value = '';
+  searchQuery = '';
+  document.getElementById('searchClear').classList.remove('visible');
+  renderCards();
+  document.getElementById('filterBar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+let activeFilter = 'All';
+let activeLift = 'All';
+let searchQuery = '';
+let activeResultsOnly = false;
+let currentRole = localStorage.getItem('thanx_hub_role') || null;
+
+const conversationContext = {
+  lastTopic: null,           // 'winback' | 'cart' | 'frequency' | 'nondiscount' | 'app' | 'holiday' | 'onboarding' | 'bonus' | 'menu' | 'vip' | 'brand' | 'daypart' | 'lowlift'
+  lastCampaigns: [],         // campaign objects referenced in last bot response
+  pendingClarification: null // { originalQuery } — waiting for user to answer a clarifying question
+};
+
+function filterCampaigns() {
+  return campaigns.filter(c => {
+    const matchType = activeFilter === 'All' ||
+      c.type === activeFilter ||
+      (activeFilter === 'Non-Discount' && c.nonDiscount) ||
+      (activeFilter === 'Menu Launch' && c.type.includes('Menu'));
+    const matchLift = activeLift === 'All' || c.lift === activeLift;
+    const matchResults = !activeResultsOnly || c.hasResults;
+    if (!matchType || !matchLift || !matchResults) return false;
+    if (!searchQuery) return true;
+    const tokens = tokenizeQuery(searchQuery);
+    if (tokens.length === 0) return true;
+    const searchText = [c.merchant, c.name, c.type, c.lifecycle, c.lift, c.goal, c.config, c.results, ...c.tags].join(' ').toLowerCase();
+    return tokens.some(t => searchText.includes(t));
+  });
+}
+
+function updateStats(filtered) {
+  document.getElementById('statCampaigns').textContent = filtered.length;
+  const merchants = new Set(filtered.map(c => c.merchant)).size;
+  document.getElementById('statMerchants').textContent = merchants;
+  document.getElementById('statLow').textContent = filtered.filter(c => c.lift === 'Low').length;
+  document.getElementById('statMed').textContent = filtered.filter(c => c.lift === 'Medium').length;
+  document.getElementById('statHigh').textContent = filtered.filter(c => c.lift === 'High').length;
+}
+
+function renderCards() {
+  const filtered = filterCampaigns();
+  const grid = document.getElementById('campaignGrid');
+  const empty = document.getElementById('emptyState');
+  Array.from(grid.querySelectorAll('.card')).forEach(c => c.remove());
+  updateStats(filtered);
+
+  if (filtered.length === 0) {
+    const strategy = getStrategyForQuery(searchQuery);
+    if (strategy && searchQuery) {
+      empty.innerHTML = renderStrategyPanel(strategy, searchQuery);
+      empty.style.textAlign = 'left';
+      empty.style.padding = '0';
+      empty.classList.add('visible');
+    } else {
+      empty.innerHTML = `<div class="empty-icon">🔍</div><div class="empty-title">No campaigns match</div><div class="empty-body">Try a different search term or clear your filters.</div>`;
+      empty.style.textAlign = 'center';
+      empty.style.padding = '80px 20px';
+      empty.classList.add('visible');
+    }
+    return;
+  }
+  empty.classList.remove('visible');
+
+  const isSales = currentRole === 'Sales';
+  const isPM = currentRole === 'Product Marketing';
+
+  // Product Marketing: group by type
+  if (isPM) {
+    const groups = {};
+    filtered.forEach(c => { if (!groups[c.type]) groups[c.type] = []; groups[c.type].push(c); });
+    let i = 0;
+    Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0])).forEach(([type, cards]) => {
+      const header = document.createElement('div');
+      header.className = 'campaign-group-header';
+      header.textContent = type;
+      grid.insertBefore(header, empty);
+      cards.forEach(c => { renderCard(c, i++, grid, empty, isSales); });
+    });
+  } else {
+    filtered.forEach((c, i) => renderCard(c, i, grid, empty, isSales));
+  }
+}
+
+function renderCard(c, i, grid, empty, showRevenue) {
+  const revenueMatch = c.hasResults && showRevenue ? c.results.match(/\$[\d,]+(?:\.\d+)?[KMB]?/) : null;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.animationDelay = `${Math.min(i * 0.03, 0.4)}s`;
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="type-badge ${getTypeClass(c.type)}">${c.type}</span>
+      <span class="lift-badge ${getLiftClass(c.lift)}">${getLiftLabel(c.lift)}</span>
+    </div>
+    <div>
+      <div class="card-merchant">${c.merchant}</div>
+      <div class="card-name">${c.name}</div>
+    </div>
+    ${revenueMatch ? `<div class="card-revenue-highlight">💰 ${revenueMatch[0]} in revenue</div>` : `<div class="card-goal">${c.goal}</div>`}
+    <div>
+      <div class="card-config-label">How it works</div>
+      <div class="card-config">${c.config}</div>
+    </div>
+    <div class="card-footer">
+      <span class="${getLifecycleClass(c.lifecycle)}">${c.lifecycle}</span>
+      ${c.nonDiscount ? '<span class="lifecycle-tag nondiscount">Non-Discount</span>' : ''}
+      ${c.tags.slice(0,3).map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+  `;
+  card.addEventListener('click', () => openModal(c));
+  grid.insertBefore(card, empty);
+}
+
+// Filters
+document.getElementById('filterBar').addEventListener('click', e => {
+  const pill = e.target.closest('.filter-pill');
+  if (!pill) return;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  activeFilter = pill.dataset.filter;
+  renderCards();
+});
+
+document.querySelector('.secondary-filters').addEventListener('click', e => {
+  const pill = e.target.closest('.lift-pill');
+  if (!pill) return;
+  document.querySelectorAll('.lift-pill').forEach(p => p.classList.remove('active-lift'));
+  pill.classList.add('active-lift');
+  activeLift = pill.dataset.lift;
+  renderCards();
+});
+
+// Search
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+
+function isQuestion(q) {
+  if (!q || q.length < 6) return false;
+  const ql = q.toLowerCase();
+  const questionStarters = /^(how|what|can|could|should|do we|did|does|which|who|when|where|is there|are there|any|give me|show me|suggest|pitch|help me|i want|i need|ideas for|campaign for|what if)/;
+  const questionWords = /(pitch|ideas?|suggest|strategy|approach|help me|campaign for|concept|best way|what.*campaign|how.*merchant|for a merchant|for my merchant|\?)/;
+  return questionStarters.test(ql) || questionWords.test(ql) || q.includes('?');
+}
+
+let questionHintTimeout = null;
+searchInput.addEventListener('input', e => {
+  searchQuery = e.target.value.trim();
+  searchClear.classList.toggle('visible', searchQuery.length > 0);
+
+  // If typing a question, show hint to use the advisor
+  clearTimeout(questionHintTimeout);
+  const existingHint = document.getElementById('searchQuestionHint');
+  if (isQuestion(searchQuery)) {
+    questionHintTimeout = setTimeout(() => {
+      if (!document.getElementById('searchQuestionHint')) {
+        const hint = document.createElement('div');
+        hint.id = 'searchQuestionHint';
+        hint.innerHTML = `<span>Looks like a strategy question — </span><button onclick="routeToAdvisor()">ask the Campaign Advisor →</button>`;
+        hint.style.cssText = 'position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--teal);color:white;padding:8px 16px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:6px;z-index:10;box-shadow:0 4px 12px rgba(0,180,164,0.3);';
+        hint.querySelector('button').style.cssText = 'background:white;color:var(--teal);border:none;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;';
+        searchInput.parentElement.style.position = 'relative';
+        searchInput.parentElement.appendChild(hint);
+      }
+    }, 600);
+  } else if (existingHint) {
+    existingHint.remove();
+  }
+
+  renderCards();
+});
+
+function routeToAdvisor() {
+  const q = searchInput.value.trim();
+  const hint = document.getElementById('searchQuestionHint');
+  if (hint) hint.remove();
+  searchInput.value = '';
+  searchQuery = '';
+  searchClear.classList.remove('visible');
+  renderCards();
+  advisorInput.value = q;
+  advisorInput.focus();
+  sendAdvisor();
+}
+
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchQuery = '';
+  searchClear.classList.remove('visible');
+  const hint = document.getElementById('searchQuestionHint');
+  if (hint) hint.remove();
+  renderCards();
+});
+
+
+// Thanx platform feature mapper
+function getThanxTools(c) {
+  const tools = new Set();
+  const tags = c.tags.join(' ').toLowerCase();
+  const type = c.type.toLowerCase();
+  const config = c.config.toLowerCase();
+  if (tags.includes('automation') || config.includes('automat') || config.includes('trigger')) tools.add('Automated Campaigns');
+  if (tags.includes('a/b test') || config.includes('a/b') || config.includes('variant')) tools.add('A/B Testing');
+  if (tags.includes('segmentation') || tags.includes('custom segment') || config.includes('segment')) tools.add('Custom Segments');
+  if (tags.includes('push notification') || tags.includes('app downloads') || config.includes('push')) tools.add('Push Notifications');
+  if (tags.includes('points multiplier') || tags.includes('double points') || tags.includes('bonus points') || type.includes('bonus')) tools.add('Points Multiplier');
+  if (tags.includes('discount') || config.includes('reward') || config.includes('$ off') || config.includes('free item')) tools.add('Rewards / Offers');
+  if (tags.includes('email') || config.includes('email') || config.includes('sent to all')) tools.add('Email Campaigns');
+  if (tags.includes('control group') || config.includes('control group')) tools.add('Control Groups');
+  if (tags.includes('cart abandonment') || type.includes('cart')) tools.add('Cart Abandonment Automation');
+  if (tags.includes('in-store') || config.includes('in-store') || config.includes('content block')) tools.add('In-App Content Blocks');
+  if (tags.includes('digital wallet') || tags.includes('stored value')) tools.add('Stored Value / Digital Wallet');
+  if (tags.includes('marketplace') || config.includes('marketplace')) tools.add('Rewards Marketplace');
+  if (tools.size === 0) tools.add('Email Campaigns');
+  if (!tools.has('Email Campaigns') && !tools.has('Push Notifications') && !tools.has('In-App Content Blocks')) tools.add('Email Campaigns');
+  return Array.from(tools);
+}
+
+// Modal
+function openModal(c) {
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <div class="modal-badges">
+      <span class="type-badge ${getTypeClass(c.type)}">${c.type}</span>
+      <span class="lift-badge ${getLiftClass(c.lift)}">${getLiftLabel(c.lift)}</span>
+      <span class="${getLifecycleClass(c.lifecycle)}">${c.lifecycle}</span>
+      ${c.nonDiscount ? '<span class="lifecycle-tag nondiscount">Non-Discount</span>' : ''}
+    </div>
+    <div class="modal-merchant">${c.merchant}</div>
+    <div class="modal-name">${c.name}</div>
+    <div class="modal-divider"></div>
+    <div class="modal-field">
+      <div class="modal-field-label">Campaign Goal</div>
+      <div class="modal-field-value">${c.goal}</div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-field-label">How to Set It Up</div>
+      <div class="modal-config-box">${c.config}</div>
+    </div>
+    <div class="modal-build-section">
+      <div class="modal-build-toggle" onclick="toggleBuildSteps(this)">
+        <div class="modal-build-toggle-left">🔧 How to Build This &nbsp;<span style="font-weight:400;font-size:12px;color:var(--text-muted)">${c.lift} Lift</span></div>
+        <span class="modal-build-chevron">▼</span>
+      </div>
+      <div class="modal-build-body">
+        <ul class="modal-build-steps">${getBuildSteps(c.lift).steps.map(s => `<li><span>${s}</span></li>`).join('')}</ul>
+        <div class="modal-build-time">⏱ ${getBuildSteps(c.lift).time}</div>
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-result-box ${c.hasResults ? 'has-results' : 'no-results'}">
+        <div class="modal-result-label">${c.hasResults ? '✓ Proven Results' : '⟳ Performance Notes'}</div>
+        <div class="modal-result-value">${c.results}</div>
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-field-label">Tags</div>
+      <div class="modal-tags">${c.tags.map(t => `<span class="modal-tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-field-label">Thanx Platform Features Used</div>
+      <div class="modal-tools">${getThanxTools(c).map(t => `<span class="modal-tool-tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-copy" id="copyPitchBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Pitch to Clipboard
+      </button>
+      <button class="btn-close-modal" id="modalCloseBtn">Close</button>
+    </div>
+  `;
+
+  document.getElementById('copyPitchBtn').addEventListener('click', () => {
+    const liftNote = `${c.lift} Lift — ${c.lift === 'Low' ? 'Quick to set up (1 campaign, minimal segmentation)' : c.lift === 'Medium' ? 'Moderate setup (automation or custom segments needed)' : 'More involved (multi-part series, A/B testing, or event coordination)'}`;
+    const pitch = `📌 Campaign Idea: ${c.name}\n🏪 Merchant Example: ${c.merchant}\n🏷️ Type: ${c.type}  |  📊 ${liftNote}\n🔄 Lifecycle Stage: ${c.lifecycle}\n\n🎯 Goal:\n${c.goal}\n\n⚙️ How to Set It Up:\n${c.config}\n\n📊 Performance / Notes:\n${c.results}\n\n🏷️ Tags: ${c.tags.join(', ')}\n\n— Sourced from the Thanx Campaign Intelligence Hub`;
+    navigator.clipboard.writeText(pitch).then(() => {
+      const btn = document.getElementById('copyPitchBtn');
+      btn.innerHTML = '✓ Copied to clipboard!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Pitch to Clipboard';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+
+  document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
+
+// ===== CONVERSATION HELPERS =====
+
+function detectTopic(q) {
+  const ql = q.toLowerCase();
+  if (ql.match(/win.?back|lapsed|re.?engage|inactive|churn|dormant/)) return 'winback';
+  if (ql.match(/cart|abandon/)) return 'cart';
+  if (ql.match(/frequen|challenge|habit|visit more|repeat/)) return 'frequency';
+  if (ql.match(/non.?discount|no discount|without discount|not a discount/)) return 'nondiscount';
+  if (ql.match(/app|download|push|notification/)) return 'app';
+  if (ql.match(/holiday|seasonal|national day|micro.?holiday/)) return 'holiday';
+  if (ql.match(/onboard|welcome|new member|first purchase|enroll/)) return 'onboarding';
+  if (ql.match(/bonus.?points|double.?points|points.?multipl|extra.?points/)) return 'bonus';
+  if (ql.match(/menu|launch|new item|secret menu/)) return 'menu';
+  if (ql.match(/vip|exclusive access|high.?value|top customers|best customers/)) return 'vip';
+  if (ql.match(/brand|community|contest|ugc|cause/)) return 'brand';
+  if (ql.match(/daypart|breakfast|lunch|slow day|off.?peak/)) return 'daypart';
+  if (ql.match(/low.?lift|quick.?win|easy campaign|simple/)) return 'lowlift';
+  return null;
+}
+
+function getCampaignsForTopic(topic) {
+  switch (topic) {
+    case 'winback':    return campaigns.filter(c => c.type === 'Win Back' || c.tags.includes('win back') || c.tags.includes('lapsed'));
+    case 'cart':       return campaigns.filter(c => c.type === 'Cart Abandonment');
+    case 'frequency':  return campaigns.filter(c => c.type === 'Frequency Challenge' || c.tags.includes('habit building'));
+    case 'nondiscount':return campaigns.filter(c => c.nonDiscount);
+    case 'app':        return campaigns.filter(c => c.type === 'App Downloads' || c.tags.includes('app downloads'));
+    case 'holiday':    return campaigns.filter(c => c.type === 'Holiday / Seasonal' || c.tags.some(t => t.includes('holiday')));
+    case 'onboarding': return campaigns.filter(c => c.lifecycle === 'Activate' || c.lifecycle === 'Enroll' || c.tags.includes('onboarding'));
+    case 'bonus':      return campaigns.filter(c => c.type === 'Bonus Points' || c.tags.some(t => t.includes('points') || t.includes('multiplier')));
+    case 'menu':       return campaigns.filter(c => c.type === 'Menu Launch' || c.tags.some(t => t.includes('menu')));
+    case 'vip':        return campaigns.filter(c => c.type === 'VIP / Daypart' || c.tags.some(t => t.includes('vip')));
+    case 'brand':      return campaigns.filter(c => c.type === 'Brand Engagement');
+    case 'daypart':    return campaigns.filter(c => c.type === 'VIP / Daypart');
+    case 'lowlift':    return campaigns.filter(c => c.lift === 'Low');
+    default:           return [];
+  }
+}
+
+function isVagueQuery(q) {
+  const ql = q.toLowerCase().trim();
+  if (detectTopic(ql)) return false;
+  if (ql.length < 12) return /^(help|ideas?|campaign|start|hmm|idk|not sure|suggest)/.test(ql);
+  return /^(i need (a )?campaign|what should (i|we) run|give me (some )?ideas?|where do i start|help me (think|figure|come up|plan)|what (would you|do you) (suggest|recommend)|i('m| am) not sure|i don't know what|can you suggest|any ideas?|not sure what)/.test(ql);
+}
+
+function isFollowUpQuery(q) {
+  if (!conversationContext.lastTopic) return false;
+  const ql = q.toLowerCase().trim();
+  const startsFollowUp = /^(which|that|the (first|second|last|best|top)|any (of them|with|that have)|do any|tell me more|more detail|what about the|how about|can you (show|tell|give)|could you|simpler|easier|lower lift|with results?|any results?|do (any|they) have|that one worked|proven|numbers|the data|best one|worst one|one with|the one that|open (the )?first)/.test(ql);
+  const shortAndTopicless = ql.length < 22 && !detectTopic(ql) && ql.split(' ').length <= 5;
+  return startsFollowUp || shortAndTopicless;
+}
+
+function handleFollowUp(q) {
+  const ql = q.toLowerCase();
+  const { lastTopic, lastCampaigns } = conversationContext;
+  const makeList = (arr) => arr.slice(0, 4).map(c => `<div class="msg-campaign-pill" onclick="openModal(campaigns.find(x=>x.id===${c.id}))"><strong>${c.merchant} — ${c.name}</strong>${c.goal}</div>`).join('');
+  const topicLabel = lastTopic ? lastTopic.replace('winback', 'win-back').replace('nondiscount', 'non-discount').replace('lowlift', 'low-lift') : 'those campaigns';
+
+  // Filter: with results / proven data
+  if (/result|data|proof|proven|work|perform|number|revenue|attribut|hard number/.test(ql)) {
+    const withResults = lastCampaigns.filter(c => c.hasResults);
+    if (withResults.length) {
+      conversationContext.lastCampaigns = withResults;
+      return `Of the ${topicLabel} campaigns I mentioned, these have documented results:<div class="msg-campaigns">${makeList(withResults)}</div><div class="msg-tip">💡 These have attributed revenue or performance data in the hub. Click any to see the full numbers.</div>`;
+    }
+    return `None of the ${topicLabel} campaigns I just showed have hard numbers in the hub yet — they're either concept-stage or the data hasn't been added. Want me to search the whole library for campaigns with proven results?`;
+  }
+
+  // Filter: simpler / low lift
+  if (/simpl|easier|easy|low.?lift|quick|fast|less work|minimal/.test(ql)) {
+    const low = lastCampaigns.filter(c => c.lift === 'Low');
+    if (low.length) {
+      conversationContext.lastCampaigns = low;
+      return `Going lower lift — here are the easier ones from what I showed:<div class="msg-campaigns">${makeList(low)}</div><div class="msg-tip">💡 Low lift = 1–2 campaigns, minimal segmentation. Great for merchants with limited bandwidth or first-time campaigns.</div>`;
+    }
+    return `The ${topicLabel} campaigns I showed are already on the simpler side. Want me to pull the easiest campaigns across the whole library instead?`;
+  }
+
+  // Deeper strategy / tell me more
+  if (/more|detail|expand|explain|elaborate|deeper|strategy|how (do|to|would)|setup|build|step/.test(ql)) {
+    const topicToQuery = { winback: 'win back lapsed', cart: 'cart abandonment', frequency: 'frequency challenge', nondiscount: 'non-discount', app: 'app downloads', holiday: 'holiday seasonal', onboarding: 'new member welcome first purchase', bonus: 'bonus points multiplier', menu: 'menu launch', vip: 'vip exclusive', brand: 'brand engagement', daypart: 'daypart breakfast lunch' };
+    const strategy = getStrategyForQuery(topicToQuery[lastTopic] || lastTopic);
+    if (strategy) {
+      const stepsHtml = strategy.steps.map((s, i) => `<div style="display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#374151;"><span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--teal);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">${i + 1}</span><span>${s}</span></div>`).join('');
+      return `Here's the full strategy for ${strategy.title.toLowerCase()}:<br><br>${stepsHtml}<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.6;"><strong>💡 Real example:</strong> ${strategy.tip}</div>`;
+    }
+  }
+
+  // Which one / best one / top pick
+  if (/which one|that one|the (first|best|top)|best one|top one|open (the )?first/.test(ql)) {
+    const best = lastCampaigns.find(c => c.hasResults) || lastCampaigns[0];
+    if (best) {
+      conversationContext.lastCampaigns = [best];
+      return `My top pick from that list: <strong>${best.merchant} — ${best.name}</strong><br><br><strong>Goal:</strong> ${best.goal}<br><br><div style="background:var(--surface2);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 14px;font-size:13px;color:var(--text-secondary);line-height:1.6;margin:10px 0;">${best.config}</div>${best.hasResults ? `<div class="msg-tip">💡 <strong>Results:</strong> ${best.results}</div>` : ''}<div class="msg-campaigns"><div class="msg-campaign-pill" onclick="openModal(campaigns.find(x=>x.id===${best.id}))"><strong>Open full campaign card →</strong>Click to see all details + copy pitch</div></div>`;
+    }
+  }
+
+  // Default: re-surface last context with a nudge
+  if (lastCampaigns.length) {
+    return `Still on ${topicLabel} — here's what I had:<div class="msg-campaigns">${makeList(lastCampaigns.slice(0, 4))}</div>What are you looking for specifically? I can filter by results, show a simpler version, or walk through the strategy step by step.`;
+  }
+  return null;
+}
+
+function askClarifyingQuestion(q) {
+  conversationContext.pendingClarification = { originalQuery: q };
+  return `Happy to help! To point you in the right direction — a couple quick questions:<br><br><strong>1.</strong> Is this for a <strong>new merchant</strong> just getting started on Thanx, or an <strong>existing one</strong> you're trying to grow?<br><br><strong>2.</strong> What's the main goal right now — driving new signups, converting first-time buyers, increasing visit frequency, or re-engaging lapsed customers?<br><br><em>Just reply with whatever feels most relevant and I'll take it from there.</em>`;
+}
+
+function handleClarificationResponse(q) {
+  const ql = q.toLowerCase();
+  conversationContext.pendingClarification = null;
+  let syntheticQ;
+
+  if (/new merchant|just start|brand new|getting start|first time|new to thanx/.test(ql)) {
+    syntheticQ = 'onboarding welcome first purchase new member';
+  } else if (/lapsed|inactive|churn|re.?engage|win.?back|bring back|lost customer/.test(ql)) {
+    syntheticQ = 'win back lapsed inactive';
+  } else if (/frequen|visit more|habit|come back more|repeat|increase visits/.test(ql)) {
+    syntheticQ = 'frequency challenge habit building';
+  } else if (/signup|acquisition|new customer|grow|enroll/.test(ql)) {
+    syntheticQ = 'acquisition signup new customer onboarding';
+  } else if (/discount|non.?discount|no discount/.test(ql)) {
+    syntheticQ = 'non-discount exclusive vip';
+  } else {
+    syntheticQ = detectTopic(ql) ? ql : 'engagement existing merchant';
+  }
+
+  const openers = { winback: 'win-back is the right play here — ', onboarding: 'for a new merchant, onboarding is where I\'d start — ', frequency: 'frequency challenges are great for this — ', cart: 'cart abandonment automation is a quick win — ' };
+  const topic = detectTopic(syntheticQ);
+  const opener = openers[topic] || 'here\'s what I\'d look at — ';
+
+  const response = getAdvisorResponse(syntheticQ);
+  if (topic) {
+    conversationContext.lastTopic = topic;
+    conversationContext.lastCampaigns = getCampaignsForTopic(topic);
+  }
+  return `Got it — ${opener}${response}`;
+}
+
+function respondToAdvisor(q) {
+  // 1. Waiting for clarification answer
+  if (conversationContext.pendingClarification) {
+    return handleClarificationResponse(q);
+  }
+  // 2. Follow-up on previous topic
+  if (isFollowUpQuery(q)) {
+    const fu = handleFollowUp(q);
+    if (fu) return fu;
+  }
+  // 3. Vague query → ask clarifying question
+  if (isVagueQuery(q)) {
+    return askClarifyingQuestion(q);
+  }
+  // 4. Normal response — update context after
+  const topic = detectTopic(q);
+  const response = getAdvisorResponse(q);
+  if (topic) {
+    conversationContext.lastTopic = topic;
+    conversationContext.lastCampaigns = getCampaignsForTopic(topic);
+  }
+  return response;
+}
+
+// ===== ADVISOR =====
+const advisorMessages = document.getElementById('advisorMessages');
+const advisorInput = document.getElementById('advisorInput');
+const advisorSend = document.getElementById('advisorSend');
+
+function addMsg(html, isUser=false) {
+  const div = document.createElement('div');
+  div.className = `msg ${isUser ? 'user' : 'bot'}`;
+  div.innerHTML = `<div class="msg-avatar">${isUser ? '👤' : '⚡'}</div><div class="msg-bubble">${html}</div>`;
+  advisorMessages.appendChild(div);
+  advisorMessages.scrollTop = advisorMessages.scrollHeight;
+}
+
+function showWelcome() {
+  const top = campaigns.filter(c => c.hasResults).slice(0,4);
+  addMsg(`Hey there! I'm your Campaign Advisor. 👋<br><br>I know every campaign in this library. Ask me about any goal — win-backs, frequency, non-discount ideas, app downloads — and I'll surface the best fits with strategic tips.<br><br><strong>Campaigns with proven results:</strong><div class="msg-campaigns">${top.map(c => `<div class="msg-campaign-pill" onclick="openModal(campaigns.find(x=>x.id===${c.id}))"><strong>${c.merchant} — ${c.name}</strong>${c.results}</div>`).join('')}</div>`);
+}
+
+function getAdvisorResponse(q) {
+  const ql = q.toLowerCase();
+
+  const makeList = (arr) => arr.slice(0,4).map(c => `<div class="msg-campaign-pill" onclick="openModal(campaigns.find(x=>x.id===${c.id}))"><strong>${c.merchant} — ${c.name}</strong>${c.goal}</div>`).join('');
+
+  if (ql.match(/event|party for points|party reward|experience reward|experiential|rsvp|access pass|invite.only|exclusive event|tasting event|chef.?table|masterclass|cooking class|live event|in.?person event|gathering|party for/)) {
+    return `Event-based rewards are one of the highest-perceived-value things you can offer, but they need a little more setup than a standard automated campaign. Here's how I'd think through it:<br><br><strong>The honest answer on automation:</strong> There's no fully automated end-to-end solution for events in Thanx right now — and that's actually fine. The good news is a simple setup works really well when done right.<br><br><div class="msg-tip">💡 <strong>Best setup: Access Pass reward + RSVP form link</strong><br><br><strong>Step 1 — Create an Access Pass reward</strong><br>Build a custom reward (e.g., "VIP Dinner Pass – [Event Name]") redeemable with points. Set the cost high enough that it feels earned, with a short redemption window tied to the event date.<br><br><strong>Step 2 — Drop a form link in the reward copy</strong><br>In the reward description or a follow-up email, link to a Google Form, Typeform, or your merchant's email tool. Collect: name, email, party size, dietary needs. That's your RSVP list. Keep it to 3–4 fields.<br><br><strong>Step 3 — Segment your send carefully</strong><br>Don't blast your whole list. Target top-tier members by lifetime spend or visit frequency. VIP events should feel scarce — 20–50 spots max. Scarcity is part of the value.<br><br><strong>Step 4 — Confirm manually, but script it</strong><br>Once RSVPs come in, the merchant sends a confirmation. Yes, manual — but it also reinforces the VIP feel. Write them a 3-sentence template they can send in 30 seconds.<br><br><strong>Why not pure automation?</strong> Events have real capacity limits and require human judgment (headcount, dietary needs, etc.). An access pass that auto-redeems without a headcount check could overbook. The form-link approach keeps the merchant in control without building anything complex.</div><br><strong>Watch out for:</strong><ul style="padding-left:16px;font-size:13px;color:var(--text-secondary);line-height:1.8;margin-top:6px;"><li>Set a <strong>redemption cap</strong> on the reward so you don't issue 200 passes for a 40-person dinner</li><li>Put the form link in <strong>both</strong> the reward copy and a follow-up email sent the day after redemption</li><li>Use a <strong>72-hour redemption window</strong> so RSVPs come in early enough to plan</li><li>Add a <strong>waitlist option</strong> in the form — overflow demand is good data and good for the merchant's confidence</li></ul><div class="msg-tip">💡 <strong>Pitch angle:</strong> "We're going to make your best customers feel like insiders. A 40-person dinner — invite-only, redeemable with points — is the kind of thing people talk about. And unlike a discount, it costs you one dinner, not margin on every transaction."</div>`;
+  }
+
+  if (ql.match(/win.?back|lapsed|re.?engage|inactive|churn/)) {
+    const r = campaigns.filter(c => c.type === 'Win Back' || c.tags.includes('win back') || c.tags.includes('lapsed'));
+    return `Win-back campaigns are high-ROI when timed right:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Target at <strong>30, 60, or 90 days</strong> post-lapse — these windows see the highest recovery. At 11+ months (Sweetfin), expect ~0.6% but it's worth it for list hygiene. Keep reward windows short (2–3 days) to create urgency. Bubbakoos' "Let's Guac About It" shows humor + tangible free item = low-friction re-entry.</div>`;
+  }
+
+  if (ql.match(/cart|abandon/)) {
+    const r = campaigns.filter(c => c.type === 'Cart Abandonment');
+    return `Cart abandonment automations pay for themselves quickly:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> RibCrib's A/B test showed that <strong>even no reward</strong> drove recovery — sometimes a simple reminder is enough. Test reward vs. no-reward before committing to a discount. 24-hour window is the sweet spot. RibCrib saw 13%+ purchase rate → $58K from a single automation.</div>`;
+  }
+
+  if (ql.match(/frequen|challenge|habit|visit more|repeat/)) {
+    const r = campaigns.filter(c => c.type === 'Frequency Challenge' || c.tags.includes('habit building'));
+    return `Frequency challenges build the habits that drive LTV:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> The magic number is <strong>3 purchases within 120 days</strong> — customers who hit that threshold are 10x more likely to return (per the Thanx playbook). Modern Market's 3-part series is a blueprint: announce → trigger at visit 1 → reward at visit 2. Tocaya kept it simple: Order 2x this month, earn 25% off.</div>`;
+  }
+
+  if (ql.match(/non.?discount|no discount|without discount|free|experience|vip|exclusive/)) {
+    const r = campaigns.filter(c => c.nonDiscount);
+    return `Non-discount rewards protect margins while building deep loyalty:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Regulars don't always need a discount — they want to feel <em>special</em>. VIP early access, secret menus, skip-the-line passes, and exclusive events create perceived value at zero or low cost. Velvet Taco's secret backdoor menu drove a <strong>30% participation rate and 13% tier upgrades</strong> — no discount needed.</div>`;
+  }
+
+  if (ql.match(/app|download|push|notification/)) {
+    const r = campaigns.filter(c => c.type === 'App Downloads' || c.tags.includes('app downloads'));
+    return `App download campaigns that drove real installs:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Velvet Taco's key move was making the reward <strong>push-only</strong> — creating a specific, concrete reason to download the app that email couldn't satisfy. Crooked Hammock used an in-store "hidden menu" approach. Both use <em>exclusivity</em> as the real driver. 4x daily downloads on the final day for Velvet Taco.</div>`;
+  }
+
+  if (ql.match(/holiday|seasonal|national day|occasion|micro.?holiday/)) {
+    const r = campaigns.filter(c => c.type === 'Holiday / Seasonal' || c.tags.some(t => t.includes('holiday')));
+    return `Holiday campaigns from Thanx merchants:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Don't just use major holidays — <em>micro-holidays</em> outperform because they feel unexpected. Dog Haus used Leap Day, Velvet Taco used National Tequila Day. One-day windows with 4x points create maximum urgency at low cost. Always align the holiday to the brand's identity.</div>`;
+  }
+
+  if (ql.match(/onboard|welcome|new member|first purchase|enroll/)) {
+    const r = campaigns.filter(c => c.lifecycle === 'Activate' || c.lifecycle === 'Enroll' || c.tags.includes('onboarding'));
+    return `Onboarding and enrollment campaigns:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> The <strong>first 30 days are critical</strong>. 79% of customers who make a first purchase never make a second — so the 2nd purchase nudge (Urbane Cafe: $257K) is one of the highest-leverage automations in the playbook. Trigger unused-reward reminders at day 3 and day 8 post-signup if no purchase.</div>`;
+  }
+
+  if (ql.match(/bonus.?points|double.?points|points.?multipl|extra.?points|points.?day|points.?week|gift.?points|2x points|3x points|4x points/)) {
+    const r = campaigns.filter(c => c.type === 'Bonus Points' || c.tags.some(t => t.includes('points') || t.includes('multiplier')));
+    return `Bonus points and multiplier campaigns:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Bonus points add less liability than granted rewards because they <em>must be claimed</em>. R&R BBQ's reverse multiplier (halving redemption cost) is an underused gem — drives visits without touching program economics permanently. DIG's unused reward reminder drives incremental revenue from rewards already issued.</div>`;
+  }
+
+  if (ql.match(/menu|launch|new item|secret|exclusive item/)) {
+    const r = campaigns.filter(c => c.type === 'Menu Launch' || c.tags.some(t => t.includes('menu')));
+    return `Menu launch and secret menu campaigns:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Loyalty-exclusive items (Eureka!'s Pastrami Burger) are powerful acquisition plays — gives non-members a concrete reason to join. Velvet Taco's tiered secret menu drove <strong>30% participation and 13% tier upgrades</strong>. A teaser before launch (Tocaya) builds buzz at zero cost.</div>`;
+  }
+
+  if (ql.match(/low.?lift|quick.?win|easy|simple/)) {
+    const r = campaigns.filter(c => c.lift === 'Low').slice(0,4);
+    return `Low-lift campaigns you can launch quickly:<div class="msg-campaigns">${makeList(r)}</div><div class="msg-tip">💡 <strong>Tip:</strong> Low lift = 1–2 campaigns, no complex segmentation. These are great starting points for new merchants or merchants with limited bandwidth. Welcome emails, double points days, birthday automations, and holiday multipliers are your quick wins.</div>`;
+  }
+
+  // Dynamic strategy builder for anything not matched above
+  const strategy = buildDynamicStrategy(q);
+  if (strategy) {
+    const liftColor = strategy.lift === 'Low' ? '#059669' : strategy.lift === 'Medium' ? '#d97706' : '#ea580c';
+    const liftBg = strategy.lift === 'Low' ? '#ecfdf5' : strategy.lift === 'Medium' ? '#fffbeb' : '#fff7ed';
+    const stepsHtml = strategy.steps.map((s,i) => `<div style="display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#374151;"><span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--teal);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">${i+1}</span><span>${s}</span></div>`).join('');
+    const relatedCampaigns = campaigns.filter(c => c.type === strategy.type || c.tags.some(t => strategy.type.toLowerCase().includes(t) || t.includes(strategy.type.toLowerCase().split('/')[0].trim()))).slice(0,3);
+    const relatedHtml = relatedCampaigns.length ? `<div style="margin-top:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;">Related campaigns on the platform</div><div class="msg-campaigns">${makeList(relatedCampaigns)}</div>` : '';
+    return `<div style="font-size:13px;font-weight:600;color:var(--teal);margin-bottom:6px;">${strategy.icon} ${strategy.headline}</div><p style="font-size:13px;color:#4b5563;line-height:1.6;margin-bottom:14px;">${strategy.body}</p>${stepsHtml}<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.6;"><strong>💡 CSM tip:</strong> ${strategy.tip}</div>${relatedHtml}`;
+  }
+
+  const top = campaigns.filter(c => c.hasResults).slice(0,4);
+  return `Here are our strongest campaigns with proven results:<div class="msg-campaigns">${makeList(top)}</div><div class="msg-tip">💡 Try asking about: win-back, cart abandonment, frequency challenges, non-discount ideas, app downloads, holidays, onboarding, bonus points, or secret menus.</div>`;
+}
+
+function sendAdvisor() {
+  const val = advisorInput.value.trim();
+  if (!val) return;
+  addMsg(val, true);
+  advisorInput.value = '';
+  setTimeout(() => addMsg(respondToAdvisor(val)), 350);
+}
+
+advisorSend.addEventListener('click', sendAdvisor);
+advisorInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAdvisor(); }
+});
+
+// ===== BUILD STEPS =====
+function getBuildSteps(lift) {
+  if (lift === 'Low') return {
+    time: 'Estimated setup: 1–2 hours',
+    steps: [
+      'Create a customer segment (e.g., "all loyalty members" or "no purchase in 30 days")',
+      'Write one email or push message with the offer or announcement',
+      'Set the send time — one-time blast or a simple trigger (e.g., 1 day after cart abandon)',
+      'Launch — no automation chain or A/B test needed'
+    ]
+  };
+  if (lift === 'Medium') return {
+    time: 'Estimated setup: 2–4 hours',
+    steps: [
+      'Define a targeted segment with specific behavioral criteria (e.g., "1 purchase, no visit in 45 days")',
+      'Set up trigger automation — time-based or behavior-based entry rule',
+      'Write 2 message variants if A/B testing, or 1 message if single-path',
+      'Configure the reward or incentive in Thanx (if applicable)',
+      'Set a control group or holdout if you need to measure lift',
+      'Launch and monitor for 7–14 days before evaluating results'
+    ]
+  };
+  return {
+    time: 'Estimated setup: 1–2 days (across multiple sessions)',
+    steps: [
+      'Audit your customer data — confirm which segments exist and have sufficient size',
+      'Map the full journey (e.g., Welcome → Day 3 nudge → Day 7 reward unlock → Day 30 check-in)',
+      'Build each message in sequence with conditional branching if needed',
+      'Configure all rewards, tiers, or offer values in Thanx',
+      'Set up A/B split at entry point if testing offer variants',
+      'QA the automation end-to-end with a test account before launching',
+      'Launch to a small cohort first, then scale to the full segment',
+      'Schedule a 30-day performance review checkpoint'
+    ]
+  };
+}
+
+function toggleBuildSteps(toggleEl) {
+  const body = toggleEl.nextElementSibling;
+  const chevron = toggleEl.querySelector('.modal-build-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+// ===== ROLE SELECTOR =====
+const ROLE_ICONS = { CSM: '👥', Sales: '📈', 'Product Marketing': '🎨', Other: '🔍' };
+
+function applyRole(role) {
+  currentRole = role;
+  localStorage.setItem('thanx_hub_role', role);
+
+  // Update topbar badge
+  document.getElementById('roleBadgeIcon').textContent = ROLE_ICONS[role] || '🔍';
+  document.getElementById('roleBadgeLabel').textContent = role;
+
+  // Advisor panel visibility
+  const advisor = document.getElementById('advisorPanel');
+  const resizer = document.getElementById('panelResizer');
+  if (role === 'CSM') {
+    advisor.classList.remove('advisor-hidden');
+    resizer.classList.remove('advisor-hidden');
+  } else {
+    advisor.classList.add('advisor-hidden');
+    resizer.classList.add('advisor-hidden');
+  }
+
+  // Sales: default proven-results filter ON
+  activeResultsOnly = (role === 'Sales');
+
+  renderCards();
+}
+
+// Role selector: show on first visit, skip if role already set
+function initRoleSelector() {
+  if (!currentRole) {
+    document.getElementById('roleOverlay').classList.remove('hidden');
+  } else {
+    applyRole(currentRole);
+  }
+}
+
+document.getElementById('roleOverlay').addEventListener('click', e => {
+  const card = e.target.closest('.role-card');
+  if (!card) return;
+  const role = card.dataset.role;
+  document.getElementById('roleOverlay').classList.add('hidden');
+  applyRole(role);
+});
+
+document.getElementById('roleBadgeBtn').addEventListener('click', () => {
+  document.getElementById('roleOverlay').classList.remove('hidden');
+});
+
+// ===== ADD CAMPAIGN DRAWER =====
+const SCRIPT_URL = ''; // Paste your Google Apps Script web app URL here after deploying
+
+let addDrawerStep = 1;
+let uploadedFile = null;
+
+function openAddDrawer() {
+  addDrawerStep = 1;
+  uploadedFile = null;
+  // Clear form fields
+  ['af-merchant','af-name','af-goal','af-config','af-results','af-tags','af-submitter'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('af-nondiscount').checked = false;
+  document.getElementById('uploadInput').value = '';
+  showAddStep(1);
+  document.getElementById('addDrawer').classList.add('open');
+  document.getElementById('addDrawerBackdrop').classList.add('open');
+}
+
+function closeAddDrawer() {
+  document.getElementById('addDrawer').classList.remove('open');
+  document.getElementById('addDrawerBackdrop').classList.remove('open');
+}
+
+function showAddStep(step) {
+  addDrawerStep = step;
+  document.querySelectorAll('.add-step').forEach(el => el.classList.remove('active'));
+  const stepEl = document.getElementById('addStep' + step);
+  if (stepEl) stepEl.classList.add('active');
+
+  const nextBtn = document.getElementById('addDrawerNext');
+  const backBtn = document.getElementById('addDrawerBack');
+  const footer = document.getElementById('addDrawerFooter');
+
+  if (step === 1) {
+    nextBtn.textContent = 'Next →'; nextBtn.disabled = true;
+    backBtn.style.display = 'none'; footer.style.display = 'flex';
+  } else if (step === 2) {
+    footer.style.display = 'none'; // no footer during extraction
+  } else if (step === 3) {
+    nextBtn.textContent = 'Submit Campaign'; nextBtn.disabled = false;
+    backBtn.style.display = ''; footer.style.display = 'flex';
+  } else if (step === 4) {
+    footer.style.display = 'none';
+  }
+}
+
+document.getElementById('btnAddCampaign').addEventListener('click', openAddDrawer);
+document.getElementById('addDrawerCloseBtn').addEventListener('click', closeAddDrawer);
+document.getElementById('addDrawerBackdrop').addEventListener('click', closeAddDrawer);
+document.getElementById('addSkipLink').addEventListener('click', () => showAddStep(3));
+
+document.getElementById('addDrawerBack').addEventListener('click', () => {
+  if (addDrawerStep === 3) showAddStep(1);
+});
+
+document.getElementById('addDrawerNext').addEventListener('click', async () => {
+  if (addDrawerStep === 1) return; // next is disabled until file picked
+  if (addDrawerStep === 3) await submitCampaign();
+});
+
+// File upload handling
+const uploadInput = document.getElementById('uploadInput');
+const uploadZone = document.getElementById('uploadZone');
+
+uploadInput.addEventListener('change', e => {
+  if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  uploadedFile = file;
+  if (!SCRIPT_URL) {
+    // No Apps Script deployed yet — skip to manual form
+    showAddStep(3);
+    return;
+  }
+  showAddStep(2); // show spinner
+
+  try {
+    const base64 = await fileToBase64(file);
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'extract', fileBase64: base64, mimeType: file.type })
+    });
+    const json = await res.json();
+    const extracted = json.content?.[0]?.text ? JSON.parse(json.content[0].text) : {};
+    prefillForm(extracted);
+    showAddStep(3);
+  } catch (err) {
+    console.warn('Extraction failed, falling back to manual form', err);
+    showAddStep(3);
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function prefillForm(data) {
+  if (data.merchant) document.getElementById('af-merchant').value = data.merchant;
+  if (data.name) document.getElementById('af-name').value = data.name;
+  if (data.type) {
+    const sel = document.getElementById('af-type');
+    [...sel.options].forEach(o => { if (o.value === data.type) sel.value = data.type; });
+  }
+  if (data.goal) document.getElementById('af-goal').value = data.goal;
+  if (data.config) document.getElementById('af-config').value = data.config;
+  if (data.results) document.getElementById('af-results').value = data.results;
+  if (data.tags) document.getElementById('af-tags').value = Array.isArray(data.tags) ? data.tags.join(', ') : data.tags;
+}
+
+async function submitCampaign() {
+  const merchant = document.getElementById('af-merchant').value.trim();
+  const name = document.getElementById('af-name').value.trim();
+  if (!merchant || !name) {
+    alert('Please fill in at least the Merchant Name and Campaign Name.');
+    return;
+  }
+
+  const newCampaign = {
+    id: Date.now(),
+    merchant,
+    name,
+    type: document.getElementById('af-type').value,
+    lift: document.getElementById('af-lift').value,
+    lifecycle: document.getElementById('af-lifecycle').value,
+    goal: document.getElementById('af-goal').value.trim(),
+    config: document.getElementById('af-config').value.trim(),
+    results: document.getElementById('af-results').value.trim() || 'Newly added — results pending',
+    hasResults: !!document.getElementById('af-results').value.trim(),
+    tags: document.getElementById('af-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+    nonDiscount: document.getElementById('af-nondiscount').checked,
+    submittedBy: document.getElementById('af-submitter').value.trim(),
+    dateAdded: new Date().toISOString().split('T')[0]
+  };
+
+  // Add to local array immediately so submitter sees it right away
+  campaigns.push(newCampaign);
+  renderCards();
+
+  // If Apps Script is configured, persist to GitHub via script
+  if (SCRIPT_URL) {
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'submit', campaign: newCampaign })
+      });
+    } catch (err) {
+      console.warn('Could not save to GitHub — campaign visible locally only', err);
+    }
+  }
+
+  showAddStep(4);
+  setTimeout(closeAddDrawer, 3000);
+}
+
+// ===== LOAD COMMUNITY CAMPAIGNS =====
+async function loadCommunityCampaigns() {
+  try {
+    const res = await fetch('community-campaigns.json?_=' + Date.now());
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) return;
+    // Avoid duplicates by id
+    const existingIds = new Set(campaigns.map(c => c.id));
+    const newOnes = data.filter(c => !existingIds.has(c.id));
+    campaigns.push(...newOnes);
+    renderCards();
+  } catch (e) { /* silently skip if file missing (local dev) */ }
+}
+
+// ===== INIT =====
+initRoleSelector();
+renderCards();
+showWelcome();
+loadCommunityCampaigns();
+
+// ===== PANEL RESIZER =====
+(function() {
+  const resizer = document.getElementById('panelResizer');
+  const panel   = document.getElementById('advisorPanel');
+  let active = false, startX = 0, startW = 0;
+
+  resizer.addEventListener('mousedown', e => {
+    active  = true;
+    startX  = e.clientX;
+    startW  = panel.offsetWidth;
+    resizer.classList.add('dragging');
+    document.body.style.cursor     = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!active) return;
+    const newW = Math.max(260, Math.min(700, startW + (e.clientX - startX)));
+    panel.style.width = newW + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!active) return;
+    active = false;
+    resizer.classList.remove('dragging');
+    document.body.style.cursor     = '';
+    document.body.style.userSelect = '';
+  });
+})();
+</script>
+</body>
+</html>
