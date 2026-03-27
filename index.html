@@ -2035,7 +2035,7 @@ function renderCards() {
   const filtered = filterCampaigns();
   const grid = document.getElementById('campaignGrid');
   const empty = document.getElementById('emptyState');
-  Array.from(grid.querySelectorAll('.card')).forEach(c => c.remove());
+  Array.from(grid.querySelectorAll('.card, .campaign-group-header')).forEach(c => c.remove());
   updateStats(filtered);
 
   if (filtered.length === 0) {
@@ -2661,7 +2661,7 @@ function openAddDrawer() {
   ['af-merchant','af-name','af-goal','af-config','af-results','af-tags','af-submitter'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
-  document.getElementById('af-nondiscount').checked = false;
+  const nd = document.getElementById('af-nondiscount'); if (nd) nd.checked = false;
   document.getElementById('uploadInput').value = '';
   showAddStep(1);
   document.getElementById('addDrawer').classList.add('open');
@@ -2683,14 +2683,19 @@ function showAddStep(step) {
   const backBtn = document.getElementById('addDrawerBack');
   const footer = document.getElementById('addDrawerFooter');
 
+  // Reset to safe defaults, then override per-step
+  nextBtn.disabled = true;
+  backBtn.style.display = 'none';
+  footer.style.display = 'flex';
+
   if (step === 1) {
-    nextBtn.textContent = 'Next →'; nextBtn.disabled = true;
-    backBtn.style.display = 'none'; footer.style.display = 'flex';
+    nextBtn.textContent = 'Next →';
   } else if (step === 2) {
-    footer.style.display = 'none'; // no footer during extraction
+    footer.style.display = 'none';
   } else if (step === 3) {
-    nextBtn.textContent = 'Submit Campaign'; nextBtn.disabled = false;
-    backBtn.style.display = ''; footer.style.display = 'flex';
+    nextBtn.textContent = 'Submit Campaign';
+    nextBtn.disabled = false;
+    backBtn.style.display = 'flex';
   } else if (step === 4) {
     footer.style.display = 'none';
   }
@@ -2912,6 +2917,12 @@ document.addEventListener('click', e => {
 });
 
 // ===== INIT =====
+// Set stats to actual counts immediately so there's no flash of stale hardcoded values
+document.getElementById('statCampaigns').textContent = campaigns.length;
+document.getElementById('statMerchants').textContent = new Set(campaigns.map(c => c.merchant)).size;
+document.getElementById('statLow').textContent = campaigns.filter(c => c.lift === 'Low').length;
+document.getElementById('statMed').textContent = campaigns.filter(c => c.lift === 'Medium').length;
+document.getElementById('statHigh').textContent = campaigns.filter(c => c.lift === 'High').length;
 initRoleSelector();
 renderCards();
 showWelcome();
