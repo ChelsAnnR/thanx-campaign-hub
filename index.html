@@ -897,6 +897,53 @@ body {
   .search-input-compact:focus { width: 200px; }
 }
 
+/* ===== TAG FILTER ===== */
+.tag-filter-wrap { position: relative; display: inline-flex; align-items: center; }
+.tag-filter-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--surface2);
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+}
+.tag-filter-btn:hover, .tag-filter-btn.open { border-color: var(--teal); color: var(--teal); }
+.tag-filter-arrow { font-size: 9px; transition: transform 0.2s; }
+.tag-filter-arrow.open { transform: rotate(180deg); }
+.tag-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0;
+  background: white; border: 1.5px solid var(--border); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); z-index: 200;
+  width: 220px; display: none; flex-direction: column;
+  overflow: hidden;
+}
+.tag-dropdown.open { display: flex; }
+.tag-search {
+  padding: 9px 12px; border: none; border-bottom: 1px solid var(--border);
+  font-size: 12px; font-family: 'DM Sans', sans-serif; outline: none;
+  background: var(--surface2); color: var(--navy);
+}
+.tag-dropdown-list {
+  max-height: 240px; overflow-y: auto; padding: 6px 0;
+  scrollbar-width: thin;
+}
+.tag-option {
+  padding: 7px 14px; font-size: 12px; color: var(--text-secondary);
+  cursor: pointer; transition: background 0.1s; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.tag-option:hover { background: var(--teal-light); color: var(--teal); }
+.tag-option.active { background: var(--teal-light); color: var(--teal); font-weight: 600; }
+.tag-option-count { float: right; font-size: 10px; color: var(--text-muted); margin-left: 6px; }
+.tag-active-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  border: 1.5px solid var(--teal); background: var(--teal-light);
+  font-size: 12px; font-weight: 600; color: var(--teal);
+  cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+}
+.tag-active-chip:hover { background: #c8f5f1; }
+
 /* ===== ROLE SELECTOR ===== */
 .role-overlay {
   position: fixed; inset: 0;
@@ -1157,6 +1204,18 @@ body {
       <button class="lift-pill low" data-lift="Low">🟢 Low Lift</button>
       <button class="lift-pill medium" data-lift="Medium">🟡 Medium Lift</button>
       <button class="lift-pill high" data-lift="High">🟠 High Lift</button>
+      <span class="filter-label-sm" style="margin-left:8px">Tag:</span>
+      <div class="tag-filter-wrap" id="tagFilterWrap">
+        <button class="tag-filter-btn" id="tagFilterBtn">
+          <span id="tagFilterLabel">All Tags</span>
+          <span class="tag-filter-arrow" id="tagFilterArrow">▼</span>
+        </button>
+        <div class="tag-dropdown" id="tagDropdown">
+          <input class="tag-search" id="tagSearch" placeholder="Search tags…" autocomplete="off">
+          <div class="tag-dropdown-list" id="tagDropdownList"></div>
+        </div>
+      </div>
+      <button class="tag-active-chip" id="tagClearChip" style="display:none"></button>
     </div>
 
     <div class="grid-scroll">
@@ -1936,6 +1995,7 @@ let activeFilter = 'All';
 let activeLift = 'All';
 let searchQuery = '';
 let activeResultsOnly = false;
+let activeTag = null;
 let currentRole = localStorage.getItem('thanx_hub_role') || null;
 
 const conversationContext = {
@@ -1952,7 +2012,8 @@ function filterCampaigns() {
       (activeFilter === 'Menu Launch' && c.type.includes('Menu'));
     const matchLift = activeLift === 'All' || c.lift === activeLift;
     const matchResults = !activeResultsOnly || c.hasResults;
-    if (!matchType || !matchLift || !matchResults) return false;
+    const matchTag = !activeTag || c.tags.includes(activeTag);
+    if (!matchType || !matchLift || !matchResults || !matchTag) return false;
     if (!searchQuery) return true;
     const tokens = tokenizeQuery(searchQuery);
     if (tokens.length === 0) return true;
@@ -2769,6 +2830,86 @@ async function loadCommunityCampaigns() {
     renderCards();
   } catch (e) { /* silently skip if file missing (local dev) */ }
 }
+
+// ===== TAG FILTER =====
+function buildTagCounts() {
+  const counts = {};
+  campaigns.forEach(c => c.tags.forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+  return counts;
+}
+
+function populateTagDropdown(filter = '') {
+  const counts = buildTagCounts();
+  const list = document.getElementById('tagDropdownList');
+  const fl = filter.toLowerCase();
+  const tags = Object.entries(counts)
+    .filter(([t]) => t.includes(fl))
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  list.innerHTML = tags.map(([t, n]) =>
+    `<div class="tag-option${activeTag === t ? ' active' : ''}" data-tag="${t}">
+      ${t}<span class="tag-option-count">${n}</span>
+    </div>`
+  ).join('');
+}
+
+function setActiveTag(tag) {
+  activeTag = tag;
+  const btn = document.getElementById('tagFilterBtn');
+  const label = document.getElementById('tagFilterLabel');
+  const chip = document.getElementById('tagClearChip');
+  if (tag) {
+    label.textContent = 'Tag';
+    btn.classList.add('open');
+    chip.textContent = tag + ' ×';
+    chip.style.display = '';
+  } else {
+    label.textContent = 'All Tags';
+    btn.classList.remove('open');
+    chip.style.display = 'none';
+  }
+  closeTagDropdown();
+  renderCards();
+}
+
+function openTagDropdown() {
+  document.getElementById('tagDropdown').classList.add('open');
+  document.getElementById('tagFilterBtn').classList.add('open');
+  document.getElementById('tagFilterArrow').classList.add('open');
+  document.getElementById('tagSearch').value = '';
+  populateTagDropdown();
+  setTimeout(() => document.getElementById('tagSearch').focus(), 50);
+}
+
+function closeTagDropdown() {
+  document.getElementById('tagDropdown').classList.remove('open');
+  if (!activeTag) {
+    document.getElementById('tagFilterBtn').classList.remove('open');
+    document.getElementById('tagFilterArrow').classList.remove('open');
+  }
+}
+
+document.getElementById('tagFilterBtn').addEventListener('click', e => {
+  const dropdown = document.getElementById('tagDropdown');
+  dropdown.classList.contains('open') ? closeTagDropdown() : openTagDropdown();
+});
+
+document.getElementById('tagSearch').addEventListener('input', e => {
+  populateTagDropdown(e.target.value);
+});
+
+document.getElementById('tagDropdownList').addEventListener('click', e => {
+  const opt = e.target.closest('.tag-option');
+  if (!opt) return;
+  const tag = opt.dataset.tag;
+  setActiveTag(activeTag === tag ? null : tag); // click same tag to deselect
+});
+
+document.getElementById('tagClearChip').addEventListener('click', () => setActiveTag(null));
+
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  if (!document.getElementById('tagFilterWrap').contains(e.target)) closeTagDropdown();
+});
 
 // ===== INIT =====
 initRoleSelector();
