@@ -911,7 +911,7 @@ body {
 .tag-filter-arrow { font-size: 9px; transition: transform 0.2s; }
 .tag-filter-arrow.open { transform: rotate(180deg); }
 .tag-dropdown {
-  position: absolute; top: calc(100% + 6px); left: 0;
+  position: absolute; top: calc(100% + 6px); right: 0;
   background: white; border: 1.5px solid var(--border); border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.1); z-index: 200;
   width: 220px; display: none; flex-direction: column;
@@ -1174,10 +1174,23 @@ body {
         <span class="stat-pipe">·</span>
         <span class="stat-num" style="color:var(--lift-high-text)" id="statHigh">10</span><span class="stat-label">&nbsp;high lift</span>
       </div>
-      <div class="search-wrap-compact">
-        <svg class="search-icon-compact" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="search-input-compact" id="searchInput" placeholder="Filter campaigns..." autocomplete="off">
-        <button class="search-clear" id="searchClear" aria-label="Clear">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="tag-filter-wrap" id="tagFilterWrap">
+          <button class="tag-filter-btn" id="tagFilterBtn">
+            <span id="tagFilterLabel">All Tags</span>
+            <span class="tag-filter-arrow" id="tagFilterArrow">▼</span>
+          </button>
+          <div class="tag-dropdown" id="tagDropdown">
+            <input class="tag-search" id="tagSearch" placeholder="Search tags…" autocomplete="off">
+            <div class="tag-dropdown-list" id="tagDropdownList"></div>
+          </div>
+        </div>
+        <button class="tag-active-chip" id="tagClearChip" style="display:none"></button>
+        <div class="search-wrap-compact">
+          <svg class="search-icon-compact" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" class="search-input-compact" id="searchInput" placeholder="Filter campaigns..." autocomplete="off">
+          <button class="search-clear" id="searchClear" aria-label="Clear">✕</button>
+        </div>
       </div>
     </div>
 
@@ -1204,18 +1217,6 @@ body {
       <button class="lift-pill low" data-lift="Low">🟢 Low Lift</button>
       <button class="lift-pill medium" data-lift="Medium">🟡 Medium Lift</button>
       <button class="lift-pill high" data-lift="High">🟠 High Lift</button>
-      <span class="filter-label-sm" style="margin-left:8px">Tag:</span>
-      <div class="tag-filter-wrap" id="tagFilterWrap">
-        <button class="tag-filter-btn" id="tagFilterBtn">
-          <span id="tagFilterLabel">All Tags</span>
-          <span class="tag-filter-arrow" id="tagFilterArrow">▼</span>
-        </button>
-        <div class="tag-dropdown" id="tagDropdown">
-          <input class="tag-search" id="tagSearch" placeholder="Search tags…" autocomplete="off">
-          <div class="tag-dropdown-list" id="tagDropdownList"></div>
-        </div>
-      </div>
-      <button class="tag-active-chip" id="tagClearChip" style="display:none"></button>
     </div>
 
     <div class="grid-scroll">
