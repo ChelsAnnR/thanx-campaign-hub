@@ -1927,25 +1927,129 @@ function buildThemeStrategy(query, data, matchedPhrase) {
 }
 
 function buildGenericStrategy(query) {
-  // Extract the most meaningful phrase to surface back to the user
-  const words = query.replace(/[?!.,]/g, '').split(/\s+/).filter(w => w.length > 3 && !['what','have','want','would','could','should','their','with','this','that','about','show','find','give','tell','idea','need','some','ways','help'].includes(w.toLowerCase()));
+  const q = query.toLowerCase().replace(/[?!.,]/g, '');
+
+  // Detect context signals from the question
+  const isUrgent    = /this weekend|tonight|tomorrow|next week|right now|asap|quick|fast|last.?minute|few days/.test(q);
+  const isEvent     = /event|game|match|fight|show|concert|festival|tournament|championship|finals|opening|launch/.test(q);
+  const isWinBack   = /lapsed|inactive|churn|lost|dormant|haven't visited|not coming back|bring back/.test(q);
+  const isFrequency = /visit more|come back|frequency|habit|recurring|repeat|come in more/.test(q);
+  const isAOV       = /spend more|order more|average order|bigger order|upsell|add.?on|aov/.test(q);
+  const isAcquire   = /new customer|new member|sign up|acquisition|attract|bring in/.test(q);
+  const isDeliv     = /delivery|online order|pickup|app order|third.?party/.test(q);
+
+  // Extract topic: meaningful nouns from the question (strip common filler)
+  const stopWords = new Set(['what','have','want','would','could','should','their','with','this','that','about','show','find','give','tell','idea','need','some','ways','help','good','great','best','run','campaign','campaigns','doing','does','make','like','know','think','going','trying']);
+  const words = q.split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
   const topic = words.slice(0, 3).join(' ') || 'this goal';
-  return {
-    icon: '🧠',
-    headline: `No saved example yet — here's how I'd approach a "${topic}" campaign`,
-    body: `We haven't run this exact campaign type before, but every successful Thanx campaign uses the same building blocks. Here's how to structure a pitch from scratch:`,
-    steps: [
-      `<strong>Define the outcome first</strong> — is this about acquisition (new loyalty signups), activation (first purchase), engagement (visit frequency), or retention (win back lapsed)? The mechanic flows from the outcome.`,
-      `<strong>Pick your mechanic</strong>: Points multiplier (low lift, broad appeal), Custom reward (medium lift, higher impact), or Multi-part challenge (high lift, strongest habit formation). Match complexity to merchant appetite.`,
-      `<strong>Build your segment</strong>: "Send to all" is your baseline. If the merchant has 6+ months of data, custom segments by recency, frequency, or item purchased will outperform blasting the full list.`,
-      `<strong>Add urgency and exclusivity</strong> — every campaign converts better with a time limit (3–7 days) and a reason why loyalty members get it first. "Loyalty member exclusive" is your hook.`,
-      `<strong>Measure it right</strong>: set up a control group before launch. Attributable revenue per send is your headline metric — it's what turns a pilot into a recurring playbook.`
-    ],
-    tip: `When pitching a new campaign idea to a merchant who's never done it before, lead with the simplest version first: one segment, one message, one reward. Prove the concept, then build complexity. A low-lift win beats a sophisticated campaign that never launches.`,
-    lift: 'Medium',
-    type: 'Holiday / Seasonal',
-    isGenerated: true
-  };
+
+  // Build tailored steps based on detected signals
+  let icon = '🧠', headline, body, steps, tip, lift = 'Medium';
+
+  if (isUrgent && isEvent) {
+    icon = '⚡';
+    headline = `Here's how to run a last-minute ${topic} campaign this weekend`;
+    body = `Short runway campaigns can absolutely work on Thanx — the key is picking mechanics that launch fast and still feel intentional, not thrown together. Here's how to execute in 24–48 hours:`;
+    steps = [
+      `<strong>Use a points multiplier — it's the fastest mechanic to launch</strong>: 2x–3x points active during the event window. No custom reward to configure, no segment to build — just set the time window and send.`,
+      `<strong>Blast your full loyalty list today</strong> with a single email or push: event name, the points offer, and the window. Keep copy short — 3 sentences max. Urgency does the work.`,
+      `<strong>Send a push notification reminder</strong> 1–2 hours before the event starts to capture nearby members who haven't ordered yet. This is your highest-converting touch.`,
+      `<strong>If you have time for one more layer</strong>: add a spend threshold (e.g., "$25+ order tonight = free appetizer") to lift AOV on top of the multiplier. Takes 10 minutes to configure.`,
+      `<strong>Skip the control group this time</strong> — with a 48-hour window there's not enough data. Just track attributable revenue per send and use it as the baseline for next time.`
+    ];
+    tip = `The event gives you the "why send now" — that's the hardest part of any campaign. Don't overthink the mechanic. A simple 2x points blast with good copy timed to the event will outperform a complex campaign that launches late.`;
+    lift = 'Low';
+  } else if (isEvent) {
+    icon = '🎉';
+    headline = `Here's how I'd pitch a ${topic} campaign to a merchant`;
+    body = `Events create a natural "reason to send" — customers expect outreach around them. On Thanx, the best event campaigns combine an exclusive offer for loyalty members with tight timing. Here's the playbook:`;
+    steps = [
+      `<strong>Anchor it to a points multiplier or exclusive reward</strong> — 2x–4x points during the event window, or a free add-on only available that day. Low lift, high excitement.`,
+      `<strong>Send 48 hours out</strong> with an announcement email ("loyalty members get exclusive access to...") to build anticipation, then send a push reminder 1–2 hours before the event starts.`,
+      `<strong>Make it loyalty-member-exclusive</strong> — "only available through the app" creates FOMO for non-members and gives existing members a reason to engage. This framing consistently outperforms open offers.`,
+      `<strong>Add a watch party or in-store angle if possible</strong> — events that bring people together physically drive group orders and higher AOV than delivery-only campaigns.`,
+      `<strong>Control group + measure attributable revenue</strong> — even for one-off events, 10–15% holdout lets you show the merchant what the campaign drove vs. organic traffic.`
+    ];
+    tip = `The event doesn't have to be your merchant's event — third-party events (sports, concerts, local festivals) are just as valid a campaign hook. The mechanic is the same; the theme just gives the send urgency and relevance.`;
+  } else if (isUrgent) {
+    icon = '⚡';
+    headline = `Fast-launch campaign for ${topic} — here's what to do this week`;
+    body = `Short-timeline campaigns work on Thanx when you pick the right mechanic. Here's how to structure something that launches fast and still drives real results:`;
+    steps = [
+      `<strong>Points multiplier first</strong> — fastest to configure (minutes, not hours), no segment required, still drives real urgency. 2x–3x points for 3–5 days is your default short-window play.`,
+      `<strong>Send to your full loyalty list</strong> — when you're short on time, skip custom segmentation. "Send all" gets you 80% of the lift with 20% of the setup.`,
+      `<strong>Write tight copy</strong>: one sentence on why now, one sentence on the offer, one CTA. Urgency copy ("this week only," "ends Sunday") outperforms descriptive copy every time.`,
+      `<strong>Time-gate the offer</strong>: 3–5 day window max. The shorter the window, the more urgency. A 7-day window feels like "anytime." A 3-day window feels like "act now."`,
+      `<strong>After it runs</strong>: pull attributable revenue per send from Thanx. Even a simple campaign gives you a benchmark — and a benchmark turns into a recurring playbook.`
+    ];
+    tip = `Speed and simplicity win more often than sophistication. The merchants who iterate fast (one campaign every 2–3 weeks, even simple ones) consistently outperform merchants who spend 2 months planning a "perfect" campaign. Done is better than perfect.`;
+    lift = 'Low';
+  } else if (isWinBack) {
+    icon = '🔁';
+    headline = `Win-back strategy for ${topic}`;
+    body = `Win-back campaigns recover high-value customers at the moment they're most likely to respond — but timing and targeting are everything.`;
+    steps = [
+      `<strong>Define your lapse window</strong>: 30, 60, or 90 days without a visit. 60-day is the sweet spot — far enough to be lapsed, not so far they've forgotten you.`,
+      `<strong>Create a custom segment</strong> in Thanx filtering for last purchase date. Don't blast your whole list — win-back only works when it's targeted at actual lapsed customers.`,
+      `<strong>Use a short-expiry reward</strong> (2–3 days) to create urgency. Long windows kill win-backs — the customer loses the sense that they need to act now.`,
+      `<strong>Personalize the copy</strong> around what they're missing: a seasonal item, a new menu launch, something that's changed since they last visited. "We miss you" performs worse than "Here's what's new."`,
+      `<strong>Add a 90-day final touchpoint</strong>: if they don't respond to the first send, one more attempt at 90 days before removing from active sends. This is also good list hygiene.`
+    ];
+    tip = `Sweetfin's 11-month win-back converted 0.6% — low by most standards, but it surfaced exactly who was truly lapsed vs. just slow. Win-backs have a dual value: recovering some customers AND identifying who to stop marketing to.`;
+  } else if (isFrequency) {
+    icon = '📈';
+    headline = `Frequency-building strategy for ${topic}`;
+    body = `Frequency campaigns build the habits that turn occasional visitors into regulars. The 3-visit threshold is your target — customers who visit 3+ times in a window are significantly more likely to become long-term loyalists.`;
+    steps = [
+      `<strong>Design a 3-part automated series</strong>: Announce the challenge → trigger a "you're halfway there" nudge at visit 1 → deliver the reward at visit 3. Each touchpoint is automated in Thanx.`,
+      `<strong>Set a time-bound window</strong> (30 days is ideal) to create urgency. Open-ended challenges have low completion rates — a deadline makes the goal feel achievable.`,
+      `<strong>Use a meaningful reward at completion</strong>: $10 off, free item, or a tier upgrade. The reward has to feel worth 3 visits — don't undervalue the effort.`,
+      `<strong>Send to your active-but-infrequent segment</strong>: customers with 1–2 visits in the last 90 days. They're engaged enough to respond; they just need a push to build the habit.`,
+      `<strong>Measure completion rate and repeat visit rate</strong> post-challenge — customers who complete frequency challenges have measurably higher LTV. This data is your pitch for running it again.`
+    ];
+    tip = `The challenge framing ("visit 3x to earn your reward") outperforms a straight discount because it requires commitment. Customers who complete a challenge feel invested — and invested customers come back.`;
+    lift = 'Medium';
+  } else if (isAOV) {
+    icon = '💰';
+    headline = `Campaign strategy to increase average order value for ${topic}`;
+    body = `AOV campaigns work best when they anchor to a specific spend threshold that feels just within reach. Here's how to structure it:`;
+    steps = [
+      `<strong>Set a spend threshold just above current AOV</strong>: if average orders are $18, make the threshold $22–25. Close enough to feel achievable, high enough to move the number.`,
+      `<strong>Pair the threshold with a meaningful reward</strong>: bonus points (low lift) or a free add-on (higher perceived value). Bonus points add less margin liability because they require a future visit to redeem.`,
+      `<strong>Add an upsell callout in the message body</strong>: "Add a side or dessert to hit $25 and earn your bonus." Naming the item to add is more effective than leaving it open-ended.`,
+      `<strong>Test reward vs. no reward</strong>: sometimes a simple "spend $25 for double points" outperforms a "spend $25 for a free item" because points feel like a gain, not a discount.`,
+      `<strong>Measure average order value before and after</strong> — Thanx can show you attributable revenue per transaction. AOV lift is your headline metric for this campaign type.`
+    ];
+    tip = `AOV campaigns are an easier pitch for margin-conscious merchants than win-backs or discounts — you're asking for more, not giving more away. Frame it as "how do we get customers to trade up" rather than "how do we discount."`;
+  } else if (isAcquire) {
+    icon = '👋';
+    headline = `New member acquisition strategy for ${topic}`;
+    body = `Acquisition campaigns on Thanx work best when they give non-members a specific, concrete reason to sign up right now — not just "join our program."`;
+    steps = [
+      `<strong>Create a sign-up incentive with a short expiry</strong>: new members get a reward (free item, bonus points) but only if they redeem within 7–14 days of joining. This drives first purchase urgency.`,
+      `<strong>Make the sign-up offer loyalty-exclusive and visible at the point of decision</strong>: in-store signage, receipt QR codes, and server mentions all outperform passive "sign up at home" asks.`,
+      `<strong>Automate the onboarding sequence</strong>: welcome email immediately → day 7 reminder if no purchase → second-purchase nudge after visit 1. This 3-touch sequence recovers sign-ups who don't immediately convert.`,
+      `<strong>Test in-store vs. digital acquisition channels</strong>: Thanx QR codes at POS convert differently than email campaigns asking existing members to refer friends. Know which channel drives more sign-ups.`,
+      `<strong>Measure sign-up-to-first-purchase conversion rate</strong> — this is more important than raw sign-up numbers. A 40% conversion rate on 100 sign-ups beats a 10% conversion rate on 500 sign-ups every time.`
+    ];
+    tip = `The first purchase is the only metric that matters at acquisition. A new member who signs up but never buys is a cost, not an asset. Every acquisition campaign should have a second step: getting them to visit.`;
+    lift = 'Low';
+  } else {
+    // True catch-all: build from the topic and give universal campaign-building framework
+    icon = '🧠';
+    headline = `Here's how I'd build a ${topic} campaign on Thanx`;
+    body = `Every successful Thanx campaign — regardless of the specific angle — uses the same core structure. Here's how to translate this idea into something that actually launches and drives revenue:`;
+    steps = [
+      `<strong>Start with the outcome</strong>: is this about driving visits (frequency), recovering lapsed customers (win-back), increasing order size (AOV), or building awareness (brand engagement)? The mechanic flows from the goal.`,
+      `<strong>Pick the right mechanic for the lift level</strong>: points multiplier (fastest to launch, lowest effort), custom reward (medium effort, higher perceived value), or automated challenge series (high effort, strongest habit formation). Match to merchant bandwidth.`,
+      `<strong>Segment before you send</strong>: "all loyalty members" is your baseline, but custom segments (by recency, frequency, or item purchased) consistently outperform blasts. Even one filter adds meaningful lift.`,
+      `<strong>Add a time limit and exclusive framing</strong>: every campaign converts better with an expiry (3–7 days) and a "loyalty member exclusive" label. Urgency + exclusivity is the core conversion lever.`,
+      `<strong>Set up measurement before launch</strong>: add a 10–15% control group and track attributable revenue per send. This turns a one-off campaign into a repeatable playbook with proof behind it.`
+    ];
+    tip = `When pitching something new to a merchant, lead with the simplest version first: one segment, one message, one mechanic. Prove the concept, then add complexity. A low-lift win that launches beats a sophisticated campaign that never gets approved.`;
+  }
+
+  return { icon, headline, body, steps, tip, lift, type: 'Holiday / Seasonal', isGenerated: true };
 }
 
 function getStrategyForQuery(query) {
