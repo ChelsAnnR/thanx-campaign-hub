@@ -776,6 +776,31 @@ body {
 .msg-campaign-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
 .msg-campaign-pill strong { color: var(--text); display: block; font-size: 12px; }
 
+.advisor-options { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 6px; }
+.advisor-opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 12px;
+  cursor: pointer; transition: all 0.18s; font-size: 12.5px;
+}
+.advisor-opt:hover { border-color: var(--teal); background: var(--teal-light); }
+.advisor-opt:hover .ao-num { background: var(--teal); }
+.ao-num {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--border); color: var(--text); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  transition: background 0.18s;
+}
+.ao-body strong { display: block; color: var(--text); font-size: 13px; margin-bottom: 2px; }
+.ao-body span { color: var(--text-secondary); line-height: 1.5; }
+.ao-lift { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+.ao-lift-low { background: #d1fae5; color: #065f46; }
+.ao-lift-med { background: #fef3c7; color: #92400e; }
+.ao-lift-high { background: #fee2e2; color: #991b1b; }
+.msg-build { margin-top: 8px; padding: 10px 12px; background: var(--teal-light); border: 1px solid var(--teal); border-radius: 8px; font-size: 12.5px; }
+.msg-build-step { display: flex; gap: 9px; margin-bottom: 7px; font-size: 12.5px; line-height: 1.55; color: #374151; }
+.msg-build-num { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--teal); color: white; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+
 .msg-tip {
   margin-top: 8px;
   padding: 8px 10px;
@@ -1909,18 +1934,59 @@ function buildDynamicStrategy(query) {
 function buildThemeStrategy(query, data, matchedPhrase) {
   const tactics = data.tactics;
   if (!Array.isArray(tactics) || tactics.length < 2) return buildGenericStrategy(query);
+
+  // Build 3 selectable options from the tactics
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const opt1desc = `2x–3x points during the ${data.theme} window — fastest to launch, no discount needed`;
+  const opt2desc = cap(tactics[0]);
+  const opt3desc = cap(tactics[1] || tactics[0]);
+
   return {
     icon: data.emoji,
     headline: `Here's how I'd pitch a ${data.theme} campaign to a merchant`,
-    body: `We don't have a saved example for this yet — but ${data.theme} is ${data.context}. Here's how to build something compelling on the Thanx platform:`,
-    steps: [
-      `<strong>Anchor it to a points multiplier</strong> — run 2x–4x points during ${data.theme} windows. Low lift, high excitement, no deep discounting needed.`,
-      `<strong>${tactics[0].charAt(0).toUpperCase() + tactics[0].slice(1)}</strong> — this is the angle that makes it feel custom to the moment, not just a generic promo.`,
-      `<strong>${tactics[1].charAt(0).toUpperCase() + tactics[1].slice(1)}</strong> — pair with a push notification timed to the moment (e.g., 1–2 hours before tip-off / event start).`,
-      `<strong>Segment smartly</strong>: send to all loyalty members first, then follow up with a VIP-only escalation (higher reward, earlier access) for your top 20% by spend.`,
-      `<strong>Add a control group</strong> (10–15% holdout) to prove incremental lift — this makes your QBR story much stronger when you show the merchant actual attributable revenue.`
+    body: `${data.theme} is ${data.context}. Here are 3 campaign approaches — pick the one that fits your merchant's bandwidth and I'll walk you through how to build it:`,
+    options: [
+      {
+        name: `${data.theme} Points Multiplier`,
+        desc: opt1desc,
+        lift: 'Low',
+        tip: `The ${data.theme} angle matters less than the mechanic — the theme gives the merchant a reason to send NOW instead of "sometime this quarter." Theme = urgency.`,
+        steps: [
+          `Create a points multiplier offer: 2x–3x points for any purchase during the ${data.theme} window`,
+          `Send a blast to your full loyalty list — one email or push notification is all you need`,
+          `Time the push reminder 1–2 hours before the main event starts to capture nearby members`,
+          `Keep it short: event name, the points offer, the window. Urgency does the work`,
+          `After it runs, pull attributable revenue per send — this becomes your benchmark for next time`
+        ]
+      },
+      {
+        name: cap(tactics[0].split(':')[0].split('—')[0].trim()),
+        desc: opt2desc,
+        lift: 'Medium',
+        tip: `Pair this with a push notification for maximum reach. Members who engage with themed campaigns have measurably higher LTV — the theme makes the campaign feel personal, not generic.`,
+        steps: [
+          `Set up the ${data.theme} campaign with the angle: ${opt2desc}`,
+          `Segment your list: send to all loyalty members first, then a VIP follow-up for your top 20% by spend`,
+          `Write copy that ties the offer to the moment — a themed headline converts better than a generic one`,
+          `Add a control group (10–15% holdout) so you can show the merchant real attributable lift`,
+          `Schedule a push notification 1–2 hours before the event for a second-touch reminder`
+        ]
+      },
+      {
+        name: cap(tactics[2] ? tactics[2].split(':')[0].split('—')[0].trim() : `${data.theme} Challenge`),
+        desc: cap(tactics[2] || tactics[1]),
+        lift: 'Medium',
+        tip: `Challenge mechanics drive 2–3x higher completion rates than passive offers because customers feel invested once they start. Best for merchants who want a multi-touch campaign, not just a one-day blast.`,
+        steps: [
+          `Design the challenge around the ${data.theme} theme: ${cap(tactics[2] || tactics[1])}`,
+          `Set a time-bound window tied to the event — open-ended challenges have low completion`,
+          `Announce via email 48 hours before, then send a push reminder when the event starts`,
+          `Reward completion with something meaningful — $10 off or a free item drives highest engagement`,
+          `Track completion rate and repeat visit rate post-challenge for your QBR data story`
+        ]
+      }
     ],
-    tip: `The ${data.theme} angle matters less than the mechanic behind it — a bracket-themed frequency challenge works the same as any frequency challenge, but the theme gives your merchant a reason to send it NOW instead of "sometime this quarter." Theme = urgency.`,
+    tip: `The ${data.theme} angle matters less than the mechanic behind it — the theme gives your merchant a reason to send it NOW.`,
     lift: 'Medium',
     type: 'Holiday / Seasonal',
     isGenerated: true
@@ -1949,17 +2015,46 @@ function buildGenericStrategy(query) {
 
   if (isUrgent && isEvent) {
     icon = '⚡';
-    headline = `Here's how to run a last-minute ${topic} campaign this weekend`;
-    body = `Short runway campaigns can absolutely work on Thanx — the key is picking mechanics that launch fast and still feel intentional, not thrown together. Here's how to execute in 24–48 hours:`;
-    steps = [
-      `<strong>Use a points multiplier — it's the fastest mechanic to launch</strong>: 2x–3x points active during the event window. No custom reward to configure, no segment to build — just set the time window and send.`,
-      `<strong>Blast your full loyalty list today</strong> with a single email or push: event name, the points offer, and the window. Keep copy short — 3 sentences max. Urgency does the work.`,
-      `<strong>Send a push notification reminder</strong> 1–2 hours before the event starts to capture nearby members who haven't ordered yet. This is your highest-converting touch.`,
-      `<strong>If you have time for one more layer</strong>: add a spend threshold (e.g., "$25+ order tonight = free appetizer") to lift AOV on top of the multiplier. Takes 10 minutes to configure.`,
-      `<strong>Skip the control group this time</strong> — with a 48-hour window there's not enough data. Just track attributable revenue per send and use it as the baseline for next time.`
-    ];
-    tip = `The event gives you the "why send now" — that's the hardest part of any campaign. Don't overthink the mechanic. A simple 2x points blast with good copy timed to the event will outperform a complex campaign that launches late.`;
-    lift = 'Low';
+    headline = `3 campaign options for a last-minute ${topic} — pick what fits`;
+    body = `Short runway is fine — the key is matching the mechanic to how much time you have. Here are 3 options ranked by how fast you can launch:`;
+    return { icon, headline, body, lift: 'Low', type: 'Holiday / Seasonal', isGenerated: true, options: [
+      {
+        name: 'Points Multiplier Blast',
+        desc: `2x–3x points during the event window — set it and send in under an hour, no custom reward needed`,
+        lift: 'Low',
+        tip: `The event gives you the "why send now" — the hardest part of any campaign. Don't overthink the mechanic. A simple blast timed to the event will outperform a complex campaign that launches late.`,
+        steps: [
+          `Configure a points multiplier (2x–3x) with an event-specific time window in Thanx`,
+          `Blast your full loyalty list: event name + the points offer + the window. 3 sentences max`,
+          `Send a push reminder 1–2 hours before the event starts — this is your highest-converting touch`,
+          `Track attributable revenue per send after it runs — this becomes your benchmark for next time`
+        ]
+      },
+      {
+        name: 'Spend Threshold + Free Add-On',
+        desc: `"$25+ order during the game = free appetizer" — lifts AOV and drives urgency at the same time`,
+        lift: 'Low',
+        tip: `Naming the specific item to add ("get a free fry with any $25 order") converts better than an open-ended offer. Takes 10 extra minutes to configure but meaningfully lifts average order size.`,
+        steps: [
+          `Set a spend threshold reward: $25+ order = free add-on or bonus points during the event window`,
+          `Send an email blast with the offer 4–6 hours before the event starts`,
+          `Include a push notification 1 hour before tip-off/start time for maximum urgency`,
+          `Keep the redemption window tight — event day only, or event day + next visit`
+        ]
+      },
+      {
+        name: 'Watch Party Exclusive',
+        desc: `In-store bonus for loyalty members who dine in on event night — rewards the best customers, drives group orders`,
+        lift: 'Medium',
+        tip: `Events that get people in the door physically drive group orders and higher AOV than delivery-only campaigns. If the merchant has TVs, make the in-store experience the hook.`,
+        steps: [
+          `Create a loyalty-member-exclusive in-store offer: free appetizer, BOGO drink, or bonus points for dining in on event night`,
+          `Email your full loyalty list with the in-store exclusive — make it clear it's member-only`,
+          `Pair with a push notification 2 hours before the event to drive walk-ins`,
+          `Optionally add a spend threshold on top: dine in + spend $30+ = extra bonus`
+        ]
+      }
+    ]};
   } else if (isEvent) {
     icon = '🎉';
     headline = `Here's how I'd pitch a ${topic} campaign to a merchant`;
@@ -2130,6 +2225,7 @@ let currentRole = localStorage.getItem('thanx_hub_role') || null;
 const conversationContext = {
   lastTopic: null,           // 'winback' | 'cart' | 'frequency' | 'nondiscount' | 'app' | 'holiday' | 'onboarding' | 'bonus' | 'menu' | 'vip' | 'brand' | 'daypart' | 'lowlift'
   lastCampaigns: [],         // campaign objects referenced in last bot response
+  lastProposedOptions: [],   // [{name, desc, lift, steps[], tip}] — options user can select from last response
   pendingClarification: null // { originalQuery } — waiting for user to answer a clarifying question
 };
 
@@ -2556,7 +2652,64 @@ function handleClarificationResponse(q) {
   return `Got it — ${opener}${response}`;
 }
 
+// ===== OPTION SELECTION =====
+
+function liftClass(lift) {
+  if (lift === 'Low') return 'ao-lift-low';
+  if (lift === 'Medium') return 'ao-lift-med';
+  return 'ao-lift-high';
+}
+
+function renderOptions(intro, options) {
+  conversationContext.lastProposedOptions = options;
+  const html = options.map((opt, i) =>
+    `<div class="advisor-opt" onclick="selectAdvisorOption(${i})">
+      <span class="ao-num">${i + 1}</span>
+      <div class="ao-body">
+        <strong>${opt.name}<span class="ao-lift ${liftClass(opt.lift)}">${opt.lift} lift</span></strong>
+        <span>${opt.desc}</span>
+      </div>
+    </div>`
+  ).join('');
+  return `${intro}<div class="advisor-options">${html}</div><div class="msg-tip">💡 Reply with <strong>1, 2, or 3</strong> — or say "let's build option 2" — and I'll walk you through the setup step by step.</div>`;
+}
+
+function selectAdvisorOption(idx) {
+  const opt = conversationContext.lastProposedOptions[idx];
+  if (!opt) return;
+  addMsg(`Let's build option ${idx + 1}: ${opt.name}`, true);
+  setTimeout(() => addMsg(renderSelectedOption(opt)), 300);
+}
+
+function detectOptionSelection(q) {
+  const ql = q.toLowerCase().trim().replace(/[!.,?]/g, '');
+  if (/^1$|^option\s*1$|^(let'?s?\s*)?(try|do|build|go with|run)\s*(option\s*)?1$|^(i'?ll?\s*)(try|take|pick|go with)\s*(option\s*)?1$/.test(ql)) return 0;
+  if (/^2$|^option\s*2$|^(let'?s?\s*)?(try|do|build|go with|run)\s*(option\s*)?2$|^(i'?ll?\s*)(try|take|pick|go with)\s*(option\s*)?2$/.test(ql)) return 1;
+  if (/^3$|^option\s*3$|^(let'?s?\s*)?(try|do|build|go with|run)\s*(option\s*)?3$|^(i'?ll?\s*)(try|take|pick|go with)\s*(option\s*)?3$/.test(ql)) return 2;
+  // Generic "let's go / sounds good / I'll try that" → pick option 1 (or only option)
+  if (/^(let'?s?\s*(go|try|do|build|run|launch)|sounds?\s*good|i'?ll?\s*(try|do|take|go)|yes\s*(let'?s)?|that one|this one|go ahead|do that|i like (it|that)|i want (to try |to do )?that)/.test(ql)) return 0;
+  return null;
+}
+
+function renderSelectedOption(opt) {
+  conversationContext.lastProposedOptions = [];
+  const build = getBuildSteps(opt.lift || 'Medium');
+  const customSteps = opt.steps && opt.steps.length ? opt.steps : build.steps;
+  const stepsHtml = customSteps.map((s, i) =>
+    `<div class="msg-build-step"><span class="msg-build-num">${i + 1}</span><span>${s}</span></div>`
+  ).join('');
+  return `Let's build <strong>${opt.name}</strong>.<br><br><div class="msg-build">${stepsHtml}</div><div class="msg-tip">💡 <strong>${build.time}</strong>${opt.tip ? ' — ' + opt.tip : ''}</div><br>Any questions on any of these steps? I can go deeper on segmentation, reward setup, or how to pitch it to the merchant.`;
+}
+
 function respondToAdvisor(q) {
+  // 0. Option selection — check before anything else
+  if (conversationContext.lastProposedOptions.length > 0) {
+    const sel = detectOptionSelection(q);
+    if (sel !== null) {
+      const opt = conversationContext.lastProposedOptions[sel] || conversationContext.lastProposedOptions[0];
+      return renderSelectedOption(opt);
+    }
+  }
   // 1. Waiting for clarification answer
   if (conversationContext.pendingClarification) {
     return handleClarificationResponse(q);
@@ -2576,6 +2729,10 @@ function respondToAdvisor(q) {
   if (topic) {
     conversationContext.lastTopic = topic;
     conversationContext.lastCampaigns = getCampaignsForTopic(topic);
+    // Store a generic "build it" option so "let's go" always works after a topic response
+    const topicNames = { winback: 'Win-Back Campaign', cart: 'Cart Abandonment Automation', frequency: 'Frequency Challenge', nondiscount: 'Non-Discount Campaign', app: 'App Download Campaign', holiday: 'Holiday Campaign', onboarding: 'Onboarding Sequence', bonus: 'Bonus Points Campaign', menu: 'Menu Launch Campaign', vip: 'VIP Exclusive Campaign', brand: 'Brand Engagement Campaign', daypart: 'Daypart Campaign', lowlift: 'Low-Lift Campaign' };
+    const liftMap = { winback: 'Medium', cart: 'Low', frequency: 'High', nondiscount: 'Medium', app: 'Medium', holiday: 'Low', onboarding: 'Low', bonus: 'Low', menu: 'Low', vip: 'High', brand: 'High', daypart: 'Medium', lowlift: 'Low' };
+    conversationContext.lastProposedOptions = [{ name: topicNames[topic] || topic, desc: '', lift: liftMap[topic] || 'Medium', tip: '' }];
   }
   return response;
 }
@@ -2661,12 +2818,16 @@ function getAdvisorResponse(q) {
   // Dynamic strategy builder for anything not matched above
   const strategy = buildDynamicStrategy(q);
   if (strategy) {
-    const liftColor = strategy.lift === 'Low' ? '#059669' : strategy.lift === 'Medium' ? '#d97706' : '#ea580c';
-    const liftBg = strategy.lift === 'Low' ? '#ecfdf5' : strategy.lift === 'Medium' ? '#fffbeb' : '#fff7ed';
-    const stepsHtml = strategy.steps.map((s,i) => `<div style="display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#374151;"><span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--teal);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">${i+1}</span><span>${s}</span></div>`).join('');
+    const intro = `<div style="font-size:13px;font-weight:600;color:var(--teal);margin-bottom:6px;">${strategy.icon} ${strategy.headline}</div><p style="font-size:13px;color:#4b5563;line-height:1.6;margin-bottom:10px;">${strategy.body}</p>`;
+    // If strategy has selectable options, render as choice list
+    if (strategy.options && strategy.options.length > 1) {
+      return renderOptions(intro, strategy.options);
+    }
+    // Otherwise render single strategy with steps
+    const stepsHtml = (strategy.steps || []).map((s,i) => `<div style="display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#374151;"><span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--teal);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">${i+1}</span><span>${s}</span></div>`).join('');
     const relatedCampaigns = campaigns.filter(c => c.type === strategy.type || c.tags.some(t => strategy.type.toLowerCase().includes(t) || t.includes(strategy.type.toLowerCase().split('/')[0].trim()))).slice(0,3);
     const relatedHtml = relatedCampaigns.length ? `<div style="margin-top:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;">Related campaigns on the platform</div><div class="msg-campaigns">${makeList(relatedCampaigns)}</div>` : '';
-    return `<div style="font-size:13px;font-weight:600;color:var(--teal);margin-bottom:6px;">${strategy.icon} ${strategy.headline}</div><p style="font-size:13px;color:#4b5563;line-height:1.6;margin-bottom:14px;">${strategy.body}</p>${stepsHtml}<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.6;"><strong>💡 CSM tip:</strong> ${strategy.tip}</div>${relatedHtml}`;
+    return `${intro}${stepsHtml}<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.6;"><strong>💡 CSM tip:</strong> ${strategy.tip}</div>${relatedHtml}<br><div class="msg-tip" style="margin-top:6px;">Want to build this out? Say <strong>"let's go"</strong> and I'll walk through the setup step by step.</div>`;
   }
 
   const top = campaigns.filter(c => c.hasResults).slice(0,4);
