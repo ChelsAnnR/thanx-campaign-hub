@@ -1908,6 +1908,7 @@ function buildDynamicStrategy(query) {
 
 function buildThemeStrategy(query, data, matchedPhrase) {
   const tactics = data.tactics;
+  if (!Array.isArray(tactics) || tactics.length < 2) return buildGenericStrategy(query);
   return {
     icon: data.emoji,
     headline: `Here's how I'd pitch a ${data.theme} campaign to a merchant`,
@@ -2338,6 +2339,7 @@ function getThanxTools(c) {
 
 // Modal
 function openModal(c) {
+  if (!c) return;
   const content = document.getElementById('modalContent');
   content.innerHTML = `
     <div class="modal-badges">
@@ -2584,6 +2586,7 @@ const advisorInput = document.getElementById('advisorInput');
 const advisorSend = document.getElementById('advisorSend');
 
 function addMsg(html, isUser=false) {
+  if (!advisorMessages) return;
   const div = document.createElement('div');
   div.className = `msg ${isUser ? 'user' : 'bot'}`;
   div.innerHTML = `<div class="msg-avatar">${isUser ? '👤' : '⚡'}</div><div class="msg-bubble">${html}</div>`;
@@ -2742,11 +2745,11 @@ function applyRole(role) {
   const advisor = document.getElementById('advisorPanel');
   const resizer = document.getElementById('panelResizer');
   if (role === 'CSM') {
-    advisor.classList.remove('advisor-hidden');
-    resizer.classList.remove('advisor-hidden');
+    if (advisor) advisor.classList.remove('advisor-hidden');
+    if (resizer) resizer.classList.remove('advisor-hidden');
   } else {
-    advisor.classList.add('advisor-hidden');
-    resizer.classList.add('advisor-hidden');
+    if (advisor) advisor.classList.add('advisor-hidden');
+    if (resizer) resizer.classList.add('advisor-hidden');
   }
 
   // Sales: default proven-results filter ON
